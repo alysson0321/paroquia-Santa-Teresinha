@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paróquia Santa Teresinha do Menino Jesus</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <script src="app.js"></script>
+</head>
+<body>
+
+  <!-- ======= Cabeçalho ======= -->
+  <header>
+    <img src="img/1.png" alt="Logo da Paróquia" class="logo">
+    <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">
+      ☰ 
+    </button>
+    <button onclick="logout()">Sair</button>
+  </header>
+
+  <!-- ====== Menu lateral ====== -->
+  <nav id="sidebar" class="sidebar" aria-hidden="true">
+    <button class="close-btn" id="menu-close" aria-label="Fechar menu">×</button>
+    <ul>
+      <li><a href="conta.html">Conta</a></li>
+      <li><a href="intencoes.html">Intenções</a></li>
+      <li><a href="#">Dízimos</a></li>
+      <li><a href="#parocos">Párocos</a></li>
+      <li><a href="#missas">Horários das Missas</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+      <li><a href="#">Comunidades</a></li>
+      <li><a href="#midias">Mídias</a></li>
+    </ul>
+  </nav>
+
+  <!-- overlay que fecha ao clicar fora -->
+  <div id="menu-overlay" class="menu-overlay"></div>
+    
+  </header>
+
+
+
+  <!-- ======= Padroeira ======= -->
+  <section class="hero">
+    <h1 style="margin-bottom: 0px;">Paróquia</h1>
+    <h1 style="margin-top: 0px;">Santa Teresinha do Menino Jesus</h1>
+    <img src="img/padroeira.jpeg" alt="Santa Teresinha do Menino Jesus">
+    <h2>Nossa Padroeira</h2>
+    <p>
+      Santa Teresinha do Menino Jesus, também conhecida como Santa Teresa de Lisieux, nasceu em 1873, na França. Desde pequena, demonstrou um profundo amor por Deus e um desejo ardente de servir. Aos 15 anos, ingressou no Carmelo de Lisieux, onde viveu uma vida simples, marcada pela humildade, oração e confiança total na misericórdia divina.
+Sua espiritualidade, conhecida como a "pequena via", ensina que a santidade está ao alcance de todos por meio de pequenos gestos feitos com grande amor. Mesmo sem sair do convento, Santa Teresinha foi proclamada Padroeira das Missões, reconhecida por seu imenso zelo missionário e amor pela humanidade.
+Faleceu aos 24 anos, deixando como legado sua autobiografia, História de uma Alma, que continua a transformar vidas ao redor do mundo. Em 1997, foi proclamada Doutora da Igreja por São João Paulo II.
+    </p>
+  </section>
+
+  <!-- ======= Nossos Párocos ======= -->
+  <section id = "parocos" class="section">
+    <h2>Nossos Párocos</h2>
+    <div  class="parocos">
+      <div class="paroco">
+        <img src="img/Padre-Everaldo.jpg" alt="Padre Everaldo">
+        <p>Padre Everaldo<br>2010 - 2015</p>
+      </div>
+      <div class="paroco">
+        <img src="img/Padre-Adriano.jpg" alt="Padre Adriano">
+        <p>Padre Adriano<br>2016 - 2020</p>
+      </div>
+      <div class="paroco">
+        <img src="img/Padre-Edjalma.jpg" alt="Padre Edjalma">
+        <p>Padre Edjalma<br>2021 - Atual</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Horário das Missas ======= -->
+  <section id = "missas" class="section">
+    <h2>Horário das Missas</h2>
+    <div  class="missas">
+      <div class="missa">
+        <img src="img/matriz antiga.jpg" alt="Igreja Matriz">
+        <p><strong>Igreja Matriz</strong><br>
+          Quinta-feira: 19h00<br>
+          Sábado: 19h30<br>
+          Domingo: 08h00
+        </p>
+      </div>
+      <div class="missa">
+        <img src="img/neves.jpg" alt="Vila Neves">
+        <p><strong>Vila Neves</strong><br>
+          Sexta-feira: 19h00<br>
+          Domingo: 19h00
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Eventos ======= -->
+  <section id = "eventos" class="section">
+    <h2>Eventos</h2>
+    <div  class="eventos">
+      <div class="evento">
+        <img src="img/logo festa n sra das neves.png" alt="Evento 1">
+        <p>Festa de Nossa Senhora das Neves<br>23/08 à 31/08<br><small>Vila Neves</small></p>
+      </div>
+      <div class="evento">
+        <img src="img/logo vigilia.png" alt="Evento 2">
+        <p>Vigília do Avivamento<br>26/07<br><small>Igreja Matriz</small></p>
+      </div>
+      <div class="evento">
+        <img src="img/logo acamps.png" alt="Evento 3">
+        <p>Retiro Acamp’s<br>05/09 à 07/09<br><small>Escola HJM</small></p>
+      </div>
+      <div class="evento">
+        <img src="img/logo festa pst25.2.png" alt="Evento 4">
+        <p>Festa de Santa Teresinha<br>22/09 à 01/10<br><small>Igreja Matriz</small></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Mídias ======= -->
+  <section id = "midias" class="section">
+    <h2>Mídias dos Eventos</h2>
+    <div  class="midias">
+      <div class="midia">
+        <img src="img/primicias.jpg" alt="Prímicias Sacerdotais">
+        <p>Prímicias Sacerdotais - Pe. Márcio<br><span style="color: #d4a017;">20/03/25</span><br>
+          <a href="https://drive.google.com/drive/folders/1E8Uzd0qh6Nhqi8rC2MmTSoSHH41Qezts" target="_blank">Acesse as mídias</a></p>
+      </div>
+      <div class="midia">
+        <img src="img/capa fst25.1.jpg" alt="Festa Santa Teresinha">
+        <p>Festa de Santa Teresinha do Menino Jesus 2025.1<br>
+          <span style="color: #d4a017;">07 à 26/01/25</span><br>
+          <a href="https://drive.google.com/drive/folders/1BkuvE3en2vKnyB8enduOcVk3uvKQHReG?usp=sharing" target="_blank">Acesse as mídias</a></p>
+      </div>
+      <div class="midia">
+        <img src="img/capa fst25.2.jpg" alt="Festa Santa Teresinha">
+        <p>Festa de Santa Teresinha do Menino Jesus 2025.2<br>
+          <span style="color: #d4a017;">24/07 à 01/10/25</span><br>
+          <a href="https://drive.google.com/drive/folders/1mUtIB4R9WPhP7kr-k3MX1i-xV6ouLsNB" target="_blank">Acesse as mídias</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Rodapé ======= -->
+  <footer>
+    Paróquia Santa Teresinha do Menino Jesus </br> Jucati-PE
+  </footer>
+  
+  <script>
+    function logout() {
+  localStorage.removeItem("usuario");
+  window.location.href = "login.html";
+}
+  </script>
+</body>
+</html>

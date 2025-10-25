@@ -1,0 +1,24 @@
+Criar usuario:
+
+{
+  "nome": "Alysson",
+  "email": "alysson@email.com",
+  "senha": "123456"
+}
+
+Logar:
+
+{
+  "email": "alysson@email.com",
+  "senha": "123456"
+}
+
+
+Intenções missa
+
+{
+  "usuario_id": 2,
+  "descricao": "Intenção pela saúde dos paroquianos",
+  "data_missa": "2025-06-01"
+}
+

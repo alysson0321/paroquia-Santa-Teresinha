@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intenções</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <a href="index.html"><button class="back-btn">&#8592;</button></a>
+    <img src="img/1.png" alt="Logo da Paróquia" class="logo">
+  </header>
+
+  <!-- Formulário -->
+  <main class="form-container">
+    <form id="form-intencao" class="form-box">
+      <label for="intencao">Intenção</label>
+      <input type="text" id="intencao" name="intencao" required>
+
+      <label for="data_missa">Data da Missa</label>
+      <input type="date" id="data_missa" name="data_missa" required>
+
+      <button type="submit" class="btn-enviar">Enviar intenção</button>
+    </form>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <p>Paróquia Santa Teresinha do Menino Jesus<br>Jucati-PE</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    if (!verificarLogin()) {
+      // o redirecionamento já é feito na função verificarLogin()
+    }
+  </script>
+  <style>
+    /* === Header === */
+
+
+.header .logo {
+  margin: 0 auto;
+  height: 60px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  position: absolute;
+  left: 16px;
+}
+
+/* === Formulário central === */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 140px); /* espaço para header + footer */
+  background: #e0e0e0; /* cinza claro */
+}
+
+.form-box {
+  background: #f9f9f9;
+  padding: 20px;
+  border: 2px solid #d4a017; /* dourado */
+  border-radius: 6px;
+  width: 90%;
+  max-width: 380px;
+  box-sizing: border-box;
+}
+
+.form-box label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Botão */
+.btn-enviar {
+  background: #174A7E;
+  color: white;
+  font-size: 16px;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-enviar:hover {
+  background: #12395f;
+}
+
+/* === Footer === */
+.footer {
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+  </style>
+</body>
+</html>
