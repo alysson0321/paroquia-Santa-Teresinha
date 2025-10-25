@@ -1,6 +1,6 @@
 // <-- MUDANÇA AQUI: Defina a URL do seu backend (Web Service) do Render
 // Esta URL será algo como: https://paroquia-backend.onrender.com
-const API_URL = 'https://paroquia-backend.onrender.com/';
+const API_URL = 'https://paroquia-backend.onrender.com';
 
 
 // menu lateral da pag incial 
