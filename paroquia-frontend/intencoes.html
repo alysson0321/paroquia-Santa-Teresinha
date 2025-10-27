@@ -35,6 +35,17 @@
 
   <script src="app.js"></script>
   
+  <script>
+    const usuarioLogado = localStorage.getItem("usuario");
+
+    // Se NÃO (!) houver um usuário salvo
+  if (!usuarioLogado) {
+   alert("Você precisa estar logado para registrar uma intenção.");
+      // Redireciona o usuário para a página de login
+   window.location.href = "login.html";
+  }
+  </script>
+
   <style>
     /* === Header === */
 
