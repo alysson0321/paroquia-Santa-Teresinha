@@ -64,7 +64,7 @@ if (formRegistro) {
   }
 
   try {
-      // <-- MUDANÇA AQUI
+      
    const res = await fetch(`${API_URL}/usuarios`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -95,7 +95,7 @@ if (formLogin) {
   const senha = document.getElementById("senha").value;
 
   try {
-      // <-- MUDANÇA AQUI
+      
    const res = await fetch(`${API_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -143,7 +143,7 @@ if (formIntencao) {
   }
 
   try {
-      // <-- MUDANÇA AQUI
+      
    const res = await fetch(`${API_URL}/intencoes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  try {
   // Buscar intenções do usuário
   if (usuario) {
-      // <-- MUDANÇA AQUI
+      
    const resIntencoes = await fetch(`${API_URL}/intencoes?usuario_id=${usuario.id}`);
    const intencoes = await resIntencoes.json();
 
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
    }
 
    // Buscar dízimos
-      // <-- MUDANÇA AQUI
+      
    const resDizimos = await fetch(`${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`);
    const dizimos = await resDizimos.json();
 
