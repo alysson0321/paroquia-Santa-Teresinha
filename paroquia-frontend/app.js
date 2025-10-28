@@ -59,7 +59,8 @@ if (formRegistro) {
   const confirmar = document.getElementById("confirmar_senha").value;
 
   if (senha !== confirmar) {
-   alert("As senhas não conferem!");
+    const erro = document.querySelector('.erro');
+    erro.innerHTML = "As senhas não conferem!";
    return;
   }
 
@@ -73,8 +74,7 @@ if (formRegistro) {
 
    if (!res.ok) throw new Error("Erro no servidor");
 
-   const data = await res.json();
-   alert(data.mensagem || "Usuário cadastrado com sucesso!");
+   
    window.location.href = "login.html";
   } catch (err) {
    console.error(err);
@@ -105,7 +105,8 @@ if (formLogin) {
    const data = await res.json();
 
    if (!res.ok) {
-    alert(data.erro || "Email ou senha incorretos!");
+    const erro = document.querySelector('.erro');
+    erro.innerHTML = (data.erro || "Email ou senha incorretos!");
     return;
    }
 
@@ -116,7 +117,6 @@ if (formLogin) {
     token: data.token
    }));
 
-   alert("Login realizado com sucesso!");
    window.location.href = "index.html";
   } catch (error) {
    console.error(error);
@@ -161,7 +161,8 @@ if (formIntencao) {
     return;
    }
 
-   alert("Intenção registrada com sucesso!");
+   const resu = document.querySelector('.resu');
+   resu.innerHTML = "Intenção registrada com sucesso!";
    formIntencao.reset();
 
   } catch (error) {
@@ -172,7 +173,7 @@ if (formIntencao) {
 }
 
 
-// ==================== PÁGINA DE PERFIL ====================
+// ==================== PÁGINA DA CONTA ====================
 document.addEventListener("DOMContentLoaded", async () => {
  const usuario = JSON.parse(localStorage.getItem("usuario"));
  const nomeEl = document.getElementById("usuario-nome");
@@ -186,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  }
 
  try {
-  // Buscar intenções do usuário
+  
   if (usuario) {
       
    const resIntencoes = await fetch(`${API_URL}/intencoes?usuario_id=${usuario.id}`);
@@ -200,7 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
    }
 
-   // Buscar dízimos
+   
       
    const resDizimos = await fetch(`${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`);
    const dizimos = await resDizimos.json();
@@ -216,6 +217,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
  } catch (error) {
   console.error(error);
-  alert("Erro ao carregar informações do usuário.");
  }
 });

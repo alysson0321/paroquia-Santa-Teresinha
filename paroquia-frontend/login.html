@@ -23,7 +23,7 @@
 
       <label for="senha">Senha</label>
       <input type="password" id="senha" name="senha" required>
-
+      <div class="erro" style="color: red; margin: 0; padding-bottom: 3px; font-weight: bolder;"></div>
       <button type="submit" class="btn-enviar">Login</button>
       <p><a href="registro.html">Não possui conta? Registre-se</a></p>
     </form>
@@ -96,6 +96,11 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 16px;
+    }
+
+    .erro{
+      text-align: center;
+      margin: 0;
     }
 
     /* Botão */

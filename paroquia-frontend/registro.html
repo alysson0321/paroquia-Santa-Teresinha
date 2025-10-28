@@ -29,7 +29,7 @@
 
       <label for="confirmar_senha">Confirmar senha</label>
       <input type="password" id="confirmar_senha" name="confirmar_senha" required>
-
+      <div class="erro"  style="color: red; margin: 0; padding-bottom: 3px; font-weight: bolder;"></div>
       <button type="submit" class="btn-enviar">Registrar</button>
     </form>
   </main>
@@ -104,7 +104,10 @@
       border: 1px solid #ccc;
       font-size: 16px;
     }
-
+    .erro{
+      text-align: center;
+      margin: 0;
+    }
     .btn-enviar {
       background: #174A7E;
       color: white;
