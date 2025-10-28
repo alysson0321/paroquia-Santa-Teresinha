@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ==================== REGISTRO ====================
+// seção do registro de usuário
 const formRegistro = document.getElementById("form-registro");
 
 if (formRegistro) {
@@ -84,7 +84,7 @@ if (formRegistro) {
 }
 
 
-// ==================== LOGIN ====================
+// seção do login de usuário
 const formLogin = document.getElementById("form-login");
 
 if (formLogin) {
@@ -126,7 +126,7 @@ if (formLogin) {
 }
 
 
-// ==================== INTENÇÕES DE MISSA ====================
+// seção das intenções 
 const formIntencao = document.getElementById("form-intencao");
 
 if (formIntencao) {
@@ -173,7 +173,7 @@ if (formIntencao) {
 }
 
 
-// ==================== PÁGINA DA CONTA ====================
+// seção da conta do usuário
 document.addEventListener("DOMContentLoaded", async () => {
  const usuario = JSON.parse(localStorage.getItem("usuario"));
  const nomeEl = document.getElementById("usuario-nome");

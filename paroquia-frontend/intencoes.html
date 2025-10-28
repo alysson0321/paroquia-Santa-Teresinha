@@ -9,13 +9,13 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- header -->
   <header class="header">
     <a href="index.html"><button class="back-btn">&#8592;</button></a>
     <img src="img/1.png" alt="Logo da Paróquia" class="logo">
   </header>
 
-  <!-- Formulário -->
+  <!-- formulário -->
   <main class="form-container">
     <form id="form-intencao" class="form-box">
       <label for="intencao">Intenção</label>
@@ -28,7 +28,7 @@
     </form>
   </main>
 
-  <!-- Rodapé -->
+  <!-- footer -->
   <footer class="footer">
     <p>Paróquia Santa Teresinha do Menino Jesus<br>Jucati-PE</p>
   </footer>
@@ -38,16 +38,14 @@
   <script>
     const usuarioLogado = localStorage.getItem("usuario");
 
-    // Se NÃO (!) houver um usuário salvo
+    //ver se o usuário está logado
   if (!usuarioLogado) {
-   alert("Você precisa estar logado para registrar uma intenção.");
-      // Redireciona o usuário para a página de login
    window.location.href = "login.html";
   }
   </script>
 
   <style>
-    /* === Header === */
+    
 
 
 .header .logo {
@@ -65,19 +63,18 @@
   left: 16px;
 }
 
-/* === Formulário central === */
 .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 140px); /* espaço para header + footer */
-  background: #e0e0e0; /* cinza claro */
+  min-height: calc(100vh - 140px); 
+  background: #e0e0e0; 
 }
 
 .form-box {
   background: #f9f9f9;
   padding: 20px;
-  border: 2px solid #d4a017; /* dourado */
+  border: 2px solid #d4a017; 
   border-radius: 6px;
   width: 90%;
   max-width: 380px;
@@ -100,7 +97,6 @@
   font-size: 16px;
 }
 
-/* Botão */
 .btn-enviar {
   background: #174A7E;
   color: white;
@@ -116,7 +112,6 @@
   background: #12395f;
 }
 
-/* === Footer === */
 .footer {
   color: white;
   text-align: center;

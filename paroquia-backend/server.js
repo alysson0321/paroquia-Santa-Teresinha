@@ -1,31 +1,24 @@
 require('dotenv').config();
 const express = require('express');
-// const mysql = require('mysql2'); // <-- MUDANÇA: Não usamos mais mysql
-const { Pool } = require('pg'); // <-- MUDANÇA: Usamos o 'pg' (Pool é a forma correta de conectar)
+const { Pool } = require('pg');
 const multer = require('multer');
 const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3000; // Porta dinâmica do Render
+const port = process.env.PORT || 3000;
 
 app.use(cors()); 
 app.use(express.json());
 
-// app.use(express.json()); // <-- Duplicado, removi
-
-// --- NOVA CONEXÃO (PostgreSQL com Render) ---
-// <-- MUDANÇA: Usamos um Pool. O Render vai fornecer esta URL de conexão
-// automaticamente como uma Variável de Ambiente.
+// Configuração do banco de dados PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // O Render pode exigir SSL para conexões externas
   ssl: {
     rejectUnauthorized: false
   }
 });
 
-// <-- MUDANÇA: O Pool gerencia conexões, então não precisamos do db.connect()
 
-// Multer (Ignorando por enquanto, como solicitado)
+// Multer que talvez seja necessário
 const storage = multer.diskStorage({
  destination: (req, file, cb) => {
   cb(null, 'uploads/comprovantes/');
@@ -55,17 +48,14 @@ app.post('/usuarios', (req, res) => {
   return res.status(400).json({ erro: 'Nome, email e senha são obrigatórios.' });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1, $2, etc. e adicionamos RETURNING id
  const query = 'INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING id';
   
-  // <-- MUDANÇA: Usamos 'pool.query' e a resposta está em 'result.rows'
  pool.query(query, [nome, email, senha, 'paroquiano'], (erro, result) => {
   if (erro) {
    console.error('erro ao cadastrar usuário:', erro);
    return res.status(500).json({ erro: 'erro ao cadastrar usuário.' });
   }
 
-    // <-- MUDANÇA: O ID retornado está em result.rows[0].id
   res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso!', id: result.rows[0].id });
  });
 });
@@ -78,21 +68,19 @@ app.post('/login', (req, res) => {
   return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1
  const query = 'SELECT * FROM usuarios WHERE email = $1';
   
- pool.query(query, [email], (erro, result) => { // <-- MUDANÇA: 'result'
+ pool.query(query, [email], (erro, result) => { 
   if (erro) {
    console.error('erro ao buscar usuário:', erro);
    return res.status(500).json({ erro: 'erro no servidor.' });
   }
 
-    // <-- MUDANÇA: Os dados estão em 'result.rows'
   if (result.rows.length === 0) {
    return res.status(404).json({ erro: 'Usuário não encontrado.' });
   }
 
-  const usuario = result.rows[0]; // <-- MUDANÇA
+  const usuario = result.rows[0];
 
   if (usuario.senha !== senha) {
    return res.status(401).json({ erro: 'Senha incorreta.' });
@@ -103,7 +91,7 @@ app.post('/login', (req, res) => {
 });
 
 
-// Rota para cadastrar intenção de missa
+// Rota para cadastrar intenção da missa
 app.post('/intencoes', (req, res) => {
  const { usuario_id, descricao, data_missa } = req.body;
 
@@ -111,7 +99,7 @@ app.post('/intencoes', (req, res) => {
   return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1, $2, $3
+  
  const sql = "INSERT INTO intencoes_missa (usuario_id, descricao, data_missa) VALUES ($1, $2, $3)";
 
  pool.query(sql, [usuario_id, descricao, data_missa], (err, result) => {
@@ -125,9 +113,7 @@ app.post('/intencoes', (req, res) => {
  });
 });
 
-// ============================
-// ROTA: Listar intenções por usuário
-// ============================
+//listar intenções por usuário
 app.get('/intencoes', (req, res) => {
  const usuario_id = req.query.usuario_id;
 
@@ -135,20 +121,17 @@ app.get('/intencoes', (req, res) => {
   return res.status(400).json({ erro: "Informe o ID do usuário." });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1
  const sql = 'SELECT * FROM intencoes_missa WHERE usuario_id = $1';
- pool.query(sql, [usuario_id], (err, result) => { // <-- MUDANÇA: 'result'
+ pool.query(sql, [usuario_id], (err, result) => {
   if (err) {
    console.error("Erro ao buscar intenções:", err);
    return res.status(500).json({ erro: "Erro no servidor." });
   }
-  res.json(result.rows); // <-- MUDANÇA: 'result.rows'
+  res.json(result.rows);
  });
 });
 
-// ============================
-// ROTA: Listar dízimos por usuário
-// ============================
+//Listar dízimos por usuário (falta implementar o pagamento)
 app.get('/pagamentos_dizimo', (req, res) => {
  const usuario_id = req.query.usuario_id;
 
@@ -156,19 +139,18 @@ app.get('/pagamentos_dizimo', (req, res) => {
   return res.status(400).json({ erro: "Informe o ID do usuário." });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1
  const sql = 'SELECT * FROM pagamentos_dizimo WHERE usuario_id = $1';
- pool.query(sql, [usuario_id], (err, result) => { // <-- MUDANÇA: 'result'
+ pool.query(sql, [usuario_id], (err, result) => {
   if (err) {
    console.error("Erro ao buscar dízimos:", err);
    return res.status(500).json({ erro: "Erro no servidor." });
   }
-  res.json(result.rows); // <-- MUDANÇA: 'result.rows'
+  res.json(result.rows);
  });
 });
 
 
-// Cadastrar evento
+// Rota dos eventos (falta implementar o sistema)
 app.post('/eventos', (req, res) => {
  const { titulo, data_inicio, data_fim, local, banner } = req.body;
 
@@ -176,31 +158,30 @@ app.post('/eventos', (req, res) => {
   return res.status(400).json({ erro: 'Todos os campos (titulo, data_inicio, data_fim, local, banner) são obrigatórios.' });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1, $2, etc. e adicionamos RETURNING id
  const query = 'INSERT INTO eventos (titulo, data_inicio, data_fim, local, banner) VALUES ($1, $2, $3, $4, $5) RETURNING id';
  pool.query(query, [titulo, data_inicio, data_fim, local, banner], (err, result) => {
   if (err) {
    console.error('Erro ao cadastrar evento:', err);
    return res.status(500).json({ erro: 'Erro ao cadastrar evento.' });
   }
-  res.status(201).json({ mensagem: 'Evento cadastrado com sucesso!', id: result.rows[0].id }); // <-- MUDANÇA
+  res.status(201).json({ mensagem: 'Evento cadastrado com sucesso!', id: result.rows[0].id }); 
  });
 });
 
-// Listar eventos
+// Listar eventos (vai precisar para exibir no front)
 app.get('/eventos', (req, res) => {
  const query = 'SELECT * FROM eventos ORDER BY data_inicio DESC';
- pool.query(query, (err, result) => { // <-- MUDANÇA
+ pool.query(query, (err, result) => { 
   if (err) {
    console.error('Erro ao buscar eventos:', err);
    return res.status(500).json({ erro: 'Erro ao buscar eventos.' });
   }
-  res.status(200).json(result.rows); // <-- MUDANÇA
+  res.status(200).json(result.rows); 
  });
 });
 
 
-// Cadastrar mídia
+// Cadastrar mídia (mesma coisa dos eventos)
 app.post('/midias', (req, res) => {
  const { titulo, data_evento, banner, link_externo } = req.body;
 
@@ -208,29 +189,29 @@ app.post('/midias', (req, res) => {
   return res.status(400).json({ erro: 'Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.' });
  }
 
-  // <-- MUDANÇA: Trocamos ? por $1, $2, etc. e adicionamos RETURNING id
  const query = 'INSERT INTO midias (titulo, data_evento, banner, link_externo) VALUES ($1, $2, $3, $4) RETURNING id';
  pool.query(query, [titulo, data_evento, banner, link_externo], (err, result) => {
   if (err) {
    console.error('Erro ao cadastrar mídia:', err);
    return res.status(500).json({ erro: 'Erro ao cadastrar mídia.' });
   }
-  res.status(201).json({ mensagem: 'Mídia cadastrada com sucesso!', id: result.rows[0].id }); // <-- MUDANÇA
+  res.status(201).json({ mensagem: 'Mídia cadastrada com sucesso!', id: result.rows[0].id });
  });
 });
 
-// Listar mídias
+// Listar mídias (também vai precisar para exibir no front)
 app.get('/midias', (req, res) => {
  const query = 'SELECT * FROM midias ORDER BY data_evento DESC';
- pool.query(query, (err, result) => { // <-- MUDANÇA
+ pool.query(query, (err, result) => { 
   if (err) {
    console.error('Erro ao buscar mídias:', err);
    return res.status(500).json({ erro: 'Erro ao buscar mídias.' });
   }
-  res.status(200).json(result.rows); // <-- MUDANÇA
+  res.status(200).json(result.rows); 
  });
 });
-// --------------- PIX ------------------- //
+
+// Rota para processar pagamentos de dízimo via PIX (não funcional ainda)
 app.post('/pagamentos-dizimo', async (req, res) => {
  let { usuario_id, valor, data_pagamento } = req.body;
 
@@ -245,7 +226,7 @@ app.post('/pagamentos-dizimo', async (req, res) => {
 
   const qrCodePix = QrCodePix({
    version: '01',
-   key: '(87) 98126-3429', // Considere mover para process.env.CHAVE_PIX
+   key: '(87) 98126-3429',
    name: 'Paroquia Sta Teresinha',
    city: 'Jucati-PE',
    transactionId: `DIZ${Date.now().toString().slice(-6)}`,
@@ -256,7 +237,6 @@ app.post('/pagamentos-dizimo', async (req, res) => {
   const copiaCola = await qrCodePix.payload();
   const qrCodeBase64 = await qrCodePix.base64();
 
-    // <-- MUDANÇA: Trocamos ? por $1, $2, etc. e adicionamos RETURNING id
   const query = 'INSERT INTO pagamentos_dizimo (usuario_id, valor, data_pagamento, status) VALUES ($1, $2, $3, $4) RETURNING id';
   pool.query(query, [usuario_id, valor, data_pagamento, 'pendente'], (erro, result) => {
    if (erro) {
@@ -268,7 +248,7 @@ app.post('/pagamentos-dizimo', async (req, res) => {
     mensagem: 'Pagamento iniciado! Escaneie o QR Code para pagar.',
     copia_cola: copiaCola,
     qrCodeBase64: qrCodeBase64,
-    pagamentoId: result.rows[0].id // <-- MUDANÇA
+    pagamentoId: result.rows[0].id 
    });
   });
 

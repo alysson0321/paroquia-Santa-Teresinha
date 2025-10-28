@@ -150,15 +150,18 @@
   </style>
   <script src="app.js"></script>
   <script>
-    const usuarioLogado = localStorage.getItem("usuario");
+  
+  //ver se o usuário está logado
+  const usuarioLogado = localStorage.getItem("usuario");
   if (!usuarioLogado) {
       window.location.href = "login.html";
   }
 
+  // função de logout
   function logout() {
- localStorage.removeItem("usuario");
+  localStorage.removeItem("usuario");
       window.location.href = "index.html";
-}
+  }
   </script>
 </body>
 </html>
