@@ -15,9 +15,7 @@
 @media (min-width: 700px) {
   .sidebar { width: 300px; }
   .sidebar ul li a { font-size: 11px; }
-  .p{
-    font-size: 13px;
-  }
+  
   .midias img{
     width: 150px;
   }
@@ -67,6 +65,8 @@ h1{
 }
 p{
     font-family: 'Lato', sans-serif;
+    overflow-wrap: break-word;
+    text-wrap: wrap;
 }
 header {
   background-color: #0b4f84;
@@ -81,13 +81,25 @@ header img.logo {
   height: 100px;
 }
 
+.back-btn {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #e5b800;
+      font-size: 35px;
+      cursor: pointer;
+      padding: 6px;
+    }
+
 .menu-toggle {
   font-size: 28px;
   cursor: pointer;
 }
 /* ====== menu ====== */
 .menu-toggle {
-  position: fixed;
   top: 16px;
   right: 18px;                
   z-index: 1200;

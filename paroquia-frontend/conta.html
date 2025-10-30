@@ -20,7 +20,7 @@
       <img src="img/perfil-icon.png" alt="Perfil" />
       <div>
         <h2 id="usuario-nome">Usuário</h2>
-        <p id="usuario-email">email@email.com</p>
+        <p id="usuario-email" style="overflow-wrap: break-word;text-wrap: wrap;">email@email.com</p>
       </div>
     </div>
 
@@ -74,16 +74,7 @@
       cursor: pointer;
       padding: 6px;
     }
-    .back-btn {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      position: absolute;
-      left: 16px;
-    }
-
+    
     .perfil-container {
       background: #ffffff;
       border: 2px solid #e5b800;
@@ -93,6 +84,8 @@
       margin: 40px auto;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-wrap: wrap;
+      overflow-wrap: break-word;
     }
 
     .perfil-header {
