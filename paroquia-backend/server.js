@@ -57,12 +57,10 @@ app.post("/usuarios", (req, res) => {
       return res.status(500).json({ erro: "erro ao cadastrar usuário." });
     }
 
-    res
-      .status(201)
-      .json({
-        mensagem: "Usuário cadastrado com sucesso!",
-        id: result.rows[0].id,
-      });
+    res.status(201).json({
+      mensagem: "Usuário cadastrado com sucesso!",
+      id: result.rows[0].id,
+    });
   });
 });
 
@@ -140,28 +138,27 @@ app.get("/intencoes", (req, res) => {
   });
 });
 
-//Remover intenções 
-app.delete('/intencoes/:id', (req, res) => {
-  const { id } = req.params; // Pega o ID da URL (ex: /intencoes/12)
+//Remover intenções
+app.delete("/intencoes/:id", (req, res) => {
+  const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ erro: 'ID da intenção é obrigatório.' });
+    return res.status(400).json({ erro: "ID da intenção é obrigatório." });
   }
 
-  const query = 'DELETE FROM intencoes_missa WHERE id = $1';
-  
+  const query = "DELETE FROM intencoes_missa WHERE id = $1";
+
   pool.query(query, [id], (erro, result) => {
     if (erro) {
-      console.error('Erro ao deletar intenção:', erro);
-      return res.status(500).json({ erro: 'Erro no servidor ao deletar.' });
-    }
-    
-    // result.rowCount (PostgreSQL) diz quantos registros foram afetados
-    if (result.rowCount === 0) {
-      return res.status(404).json({ erro: 'Intenção não encontrada.' });
+      console.error("Erro ao deletar intenção:", erro);
+      return res.status(500).json({ erro: "Erro no servidor ao deletar." });
     }
 
-    res.status(200).json({ mensagem: 'Intenção removida com sucesso!' });
+    if (result.rowCount === 0) {
+      return res.status(404).json({ erro: "Intenção não encontrada." });
+    }
+
+    res.status(200).json({ mensagem: "Intenção removida com sucesso!" });
   });
 });
 
@@ -188,11 +185,9 @@ app.post("/eventos", (req, res) => {
   const { titulo, data_inicio, data_fim, local, banner } = req.body;
 
   if (!titulo || !data_inicio || !data_fim || !local || !banner) {
-    return res
-      .status(400)
-      .json({
-        erro: "Todos os campos (titulo, data_inicio, data_fim, local, banner) são obrigatórios.",
-      });
+    return res.status(400).json({
+      erro: "Todos os campos (titulo, data_inicio, data_fim, local, banner) são obrigatórios.",
+    });
   }
 
   const query =
@@ -205,12 +200,10 @@ app.post("/eventos", (req, res) => {
         console.error("Erro ao cadastrar evento:", err);
         return res.status(500).json({ erro: "Erro ao cadastrar evento." });
       }
-      res
-        .status(201)
-        .json({
-          mensagem: "Evento cadastrado com sucesso!",
-          id: result.rows[0].id,
-        });
+      res.status(201).json({
+        mensagem: "Evento cadastrado com sucesso!",
+        id: result.rows[0].id,
+      });
     }
   );
 });
@@ -232,11 +225,9 @@ app.post("/midias", (req, res) => {
   const { titulo, data_evento, banner, link_externo } = req.body;
 
   if (!titulo || !data_evento || !banner || !link_externo) {
-    return res
-      .status(400)
-      .json({
-        erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
-      });
+    return res.status(400).json({
+      erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
+    });
   }
 
   const query =
@@ -249,12 +240,10 @@ app.post("/midias", (req, res) => {
         console.error("Erro ao cadastrar mídia:", err);
         return res.status(500).json({ erro: "Erro ao cadastrar mídia." });
       }
-      res
-        .status(201)
-        .json({
-          mensagem: "Mídia cadastrada com sucesso!",
-          id: result.rows[0].id,
-        });
+      res.status(201).json({
+        mensagem: "Mídia cadastrada com sucesso!",
+        id: result.rows[0].id,
+      });
     }
   );
 });
@@ -276,11 +265,9 @@ app.post("/pagamentos-dizimo", async (req, res) => {
   let { usuario_id, valor, data_pagamento } = req.body;
 
   if (!usuario_id || !valor || !data_pagamento) {
-    return res
-      .status(400)
-      .json({
-        erro: "usuario id, valor e data de pagamento são obrigatórios.",
-      });
+    return res.status(400).json({
+      erro: "usuario id, valor e data de pagamento são obrigatórios.",
+    });
   }
 
   valor = parseFloat(valor);
