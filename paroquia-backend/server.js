@@ -140,6 +140,31 @@ app.get("/intencoes", (req, res) => {
   });
 });
 
+//Remover intenções 
+app.delete('/intencoes/:id', (req, res) => {
+  const { id } = req.params; // Pega o ID da URL (ex: /intencoes/12)
+
+  if (!id) {
+    return res.status(400).json({ erro: 'ID da intenção é obrigatório.' });
+  }
+
+  const query = 'DELETE FROM intencoes_missa WHERE id = $1';
+  
+  pool.query(query, [id], (erro, result) => {
+    if (erro) {
+      console.error('Erro ao deletar intenção:', erro);
+      return res.status(500).json({ erro: 'Erro no servidor ao deletar.' });
+    }
+    
+    // result.rowCount (PostgreSQL) diz quantos registros foram afetados
+    if (result.rowCount === 0) {
+      return res.status(404).json({ erro: 'Intenção não encontrada.' });
+    }
+
+    res.status(200).json({ mensagem: 'Intenção removida com sucesso!' });
+  });
+});
+
 //Listar dízimos por usuário (falta implementar o pagamento)
 app.get("/pagamentos_dizimo", (req, res) => {
   const usuario_id = req.query.usuario_id;

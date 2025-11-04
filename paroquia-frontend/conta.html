@@ -136,6 +136,38 @@
         color: #3a4a63;
       }
 
+      .intencao-item {
+      display: flex;
+      justify-content: space-between; /* Alinha o texto e o botão */
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee; /* Linha separadora */
+    }
+    
+    .intencao-item p {
+      margin: 0; /* Remove a margem padrão do <p> */
+      flex-grow: 1; /* Faz o parágrafo ocupar o espaço */
+      margin-right: 10px; /* Espaço entre o texto e o botão */
+      overflow-wrap: break-word; /* Quebra de linha */
+      text-wrap: wrap;
+    }
+
+    .btn-remover {
+      background-color: #e63946; /* Vermelho */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      flex-shrink: 0; /* Impede que o botão encolha */
+    }
+    
+    .btn-remover:hover {
+      background-color: #c91825;
+    }
+
+  
       footer {
         color: white;
         text-align: center;
