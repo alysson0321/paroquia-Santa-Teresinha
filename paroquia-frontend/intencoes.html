@@ -1,118 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intenções</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intenções</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- header -->
+    <header class="header">
+      <a href="index.html"><button class="back-btn">&#8592;</button></a>
+      <img src="img/1.png" alt="Logo da Paróquia" class="logo" />
+    </header>
 
-  <!-- header -->
-  <header class="header">
-    <a href="index.html"><button class="back-btn">&#8592;</button></a>
-    <img src="img/1.png" alt="Logo da Paróquia" class="logo">
-  </header>
+    <!-- formulário -->
+    <main class="form-container">
+      <form id="form-intencao" class="form-box">
+        <label for="intencao">Intenção</label>
+        <input type="text" id="intencao" name="intencao" required />
 
-  <!-- formulário -->
-  <main class="form-container">
-    <form id="form-intencao" class="form-box">
-      <label for="intencao">Intenção</label>
-      <input type="text" id="intencao" name="intencao" required>
+        <label for="data_missa">Data da Missa</label>
+        <input type="date" id="data_missa" name="data_missa" required />
+        <div
+          class="resu"
+          style="text-align: center; color: green; font-weight: bolder"
+        ></div>
+        <button type="submit" class="btn-enviar">Enviar intenção</button>
+      </form>
+    </main>
 
-      <label for="data_missa">Data da Missa</label>
-      <input type="date" id="data_missa" name="data_missa" required>
-      <div class="resu" style="text-align: center; color: green; font-weight: bolder;"></div>
-      <button type="submit" class="btn-enviar">Enviar intenção</button>
-    </form>
-  </main>
+    <!-- footer -->
+    <footer class="footer">
+      <p>Paróquia Santa Teresinha do Menino Jesus<br />Jucati-PE</p>
+    </footer>
 
-  <!-- footer -->
-  <footer class="footer">
-    <p>Paróquia Santa Teresinha do Menino Jesus<br>Jucati-PE</p>
-  </footer>
+    <script src="app.js"></script>
 
-  <script src="app.js"></script>
-  
-  <script>
-    const usuarioLogado = localStorage.getItem("usuario");
+    <script>
+      const usuarioLogado = localStorage.getItem("usuario");
 
-    //ver se o usuário está logado
-  if (!usuarioLogado) {
-   window.location.href = "login.html";
-  }
-  </script>
+      //ver se o usuário está logado
+      if (!usuarioLogado) {
+        window.location.href = "login.html";
+      }
+    </script>
 
-  <style>
-    
+    <style>
+      .header .logo {
+        margin: 0 auto;
+        height: 60px;
+      }
 
+      .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 140px);
+        background: #e0e0e0;
+      }
 
-.header .logo {
-  margin: 0 auto;
-  height: 60px;
-}
+      .form-box {
+        background: #f9f9f9;
+        padding: 20px;
+        border: 2px solid #d4a017;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 380px;
+        box-sizing: border-box;
+      }
 
+      .form-box label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #333;
+      }
 
-.form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 140px); 
-  background: #e0e0e0; 
-}
+      .form-box input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+      }
 
-.form-box {
-  background: #f9f9f9;
-  padding: 20px;
-  border: 2px solid #d4a017; 
-  border-radius: 6px;
-  width: 90%;
-  max-width: 380px;
-  box-sizing: border-box;
-}
+      .btn-enviar {
+        background: #174a7e;
+        color: white;
+        font-size: 16px;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 6px;
+        cursor: pointer;
+      }
 
-.form-box label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #333;
-}
+      .btn-enviar:hover {
+        background: #12395f;
+      }
 
-.form-box input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-.btn-enviar {
-  background: #174A7E;
-  color: white;
-  font-size: 16px;
-  border: none;
-  padding: 12px;
-  width: 100%;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-enviar:hover {
-  background: #12395f;
-}
-
-.footer {
-  color: white;
-  text-align: center;
-  padding: 8px;
-  font-size: 14px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
-  </style>
-</body>
+      .footer {
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-size: 14px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </body>
 </html>

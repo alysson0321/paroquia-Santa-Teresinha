@@ -1,160 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minha Conta</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minha Conta</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <header>
+      <a href="index.html"><button class="back-btn">&#8592;</button></a>
+      <a href="index.html"
+        ><img src="img/1.png" alt="Paróquia Santa Teresinha"
+      /></a>
+      <button class="out-btn" onclick="logout()">Sair</button>
+    </header>
 
-  <header>
-    <a href="index.html"><button class="back-btn">&#8592;</button></a>
-    <a href="index.html"><img src="img/1.png" alt="Paróquia Santa Teresinha" /></a>
-    <button class="out-btn" onclick="logout()">Sair</button>
-  </header>
+    <div class="perfil-container">
+      <div class="perfil-header">
+        <img src="img/perfil-icon.png" alt="Perfil" />
+        <div>
+          <h2 id="usuario-nome">Usuário</h2>
+          <p
+            id="usuario-email"
+            style="overflow-wrap: break-word; text-wrap: wrap"
+          >
+            email@email.com
+          </p>
+        </div>
+      </div>
 
-  <div class="perfil-container">
-    <div class="perfil-header">
-      <img src="img/perfil-icon.png" alt="Perfil" />
-      <div>
-        <h2 id="usuario-nome">Usuário</h2>
-        <p id="usuario-email" style="overflow-wrap: break-word;text-wrap: wrap;">email@email.com</p>
+      <div class="sessao">
+        <h3>Minhas intenções:</h3>
+        <div id="lista-intencoes">
+          <p>Carregando intenções...</p>
+        </div>
+      </div>
+
+      <div class="sessao">
+        <h3>Meus Dízimos:</h3>
+        <div id="lista-dizimos">
+          <p>Carregando dízimos...</p>
+        </div>
       </div>
     </div>
 
-    <div class="sessao">
-      <h3>Minhas intenções:</h3>
-      <div id="lista-intencoes">
-        <p>Carregando intenções...</p>
-      </div>
-    </div>
+    <footer>
+      Paróquia Santa Teresinha do Menino Jesus <br />
+      Jucati-PE
+    </footer>
 
-    <div class="sessao">
-      <h3>Meus Dízimos:</h3>
-      <div id="lista-dizimos">
-        <p>Carregando dízimos...</p>
-      </div>
-    </div>
-  </div>
+    <style>
+      body {
+        background-color: #f7f8fa;
+        margin: 0;
+        padding: 0;
+      }
 
-  <footer>
-    Paróquia Santa Teresinha do Menino Jesus <br> Jucati-PE
-  </footer>
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+        position: relative;
+      }
 
-  <style>
-    body {
-      background-color: #f7f8fa;
-      margin: 0;
-      padding: 0;
-    }
+      header img {
+        height: 60px;
+      }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 0;
-      position: relative;
-    }
+      .out-btn {
+        position: absolute;
+        right: 16px;
+        background: #d9d9d9;
+        color: #003366;
+        border: 2px solid #d4a017;
+        border-radius: 15px;
+        border-color: #d4a017;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 6px;
+      }
 
-    header img {
-      height: 60px;
-    }
+      .perfil-container {
+        background: #ffffff;
+        border: 2px solid #e5b800;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 400px;
+        margin: 40px auto;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-wrap: wrap;
+        overflow-wrap: break-word;
+      }
 
-    .out-btn{
-      position: absolute;
-      right: 16px;
-      background: #d9d9d9;
-      color: #003366;
-      border: 2px solid #d4a017;
-      border-radius: 15px;
-      border-color: #d4a017;
-      font-size: 16px;
-      cursor: pointer;
-      padding: 6px;
-    }
-    
-    .perfil-container {
-      background: #ffffff;
-      border: 2px solid #e5b800;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 400px;
-      margin: 40px auto;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-wrap: wrap;
-      overflow-wrap: break-word;
-    }
+      .perfil-header {
+        display: flex;
+        align-items: center;
+        background-color: #f5f6f8;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
 
-    .perfil-header {
-      display: flex;
-      align-items: center;
-      background-color: #f5f6f8;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
+      .perfil-header img {
+        width: 50px;
+        margin-right: 15px;
+      }
 
-    .perfil-header img {
-      width: 50px;
-      margin-right: 15px;
-    }
+      .perfil-header h2 {
+        color: #003366;
+        margin: 0;
+      }
 
-    .perfil-header h2 {
-      color: #003366;
-      margin: 0;
-    }
+      .perfil-header p {
+        margin: 2px 0 0;
+        color: #3a4a63;
+        font-size: 0.9rem;
+      }
 
-    .perfil-header p {
-      margin: 2px 0 0;
-      color: #3a4a63;
-      font-size: 0.9rem;
-    }
+      .sessao {
+        border-top: 2px solid #e5b800;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
 
-    .sessao {
-      border-top: 2px solid #e5b800;
-      padding-top: 10px;
-      margin-top: 10px;
-    }
+      .sessao h3 {
+        color: #003366;
+        margin-bottom: 8px;
+      }
 
-    .sessao h3 {
-      color: #003366;
-      margin-bottom: 8px;
-    }
+      .sessao p {
+        margin: 4px 0;
+        color: #3a4a63;
+      }
 
-    .sessao p {
-      margin: 4px 0;
-      color: #3a4a63;
-    }
+      footer {
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        margin: 0;
+      }
+    </style>
+    <script src="app.js"></script>
+    <script>
+      //ver se o usuário está logado
+      const usuarioLogado = localStorage.getItem("usuario");
+      if (!usuarioLogado) {
+        window.location.href = "login.html";
+      }
 
-    footer {
-      color: white;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-      margin: 0;
-    }
-  </style>
-  <script src="app.js"></script>
-  <script>
-  
-  //ver se o usuário está logado
-  const usuarioLogado = localStorage.getItem("usuario");
-  if (!usuarioLogado) {
-      window.location.href = "login.html";
-  }
-
-  // função de logout
-  function logout() {
-  localStorage.removeItem("usuario");
-      window.location.href = "index.html";
-  }
-  </script>
-</body>
+      // função de logout
+      function logout() {
+        localStorage.removeItem("usuario");
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
 </html>
