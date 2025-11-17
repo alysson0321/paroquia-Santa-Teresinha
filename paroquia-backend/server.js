@@ -9,13 +9,26 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Configuração do banco de dados PostgreSQL
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
+// Configuração do banco de dados
+const connectionString = process.env.DATABASE_URL;
+
+// Prepara a configuração da conexão
+const connectionConfig = {
+  connectionString: connectionString,
+};
+
+// Só ativa o SSL se a string de conexão não for local
+// .env local usa 'localhost'
+if (connectionString && !connectionString.includes("localhost")) {
+  connectionConfig.ssl = {
     rejectUnauthorized: false,
-  },
-});
+  };
+}
+
+// Cria o Pool com a configuração correta (local ou produção)
+const pool = new Pool(connectionConfig);
+
+
 
 // Multer que talvez seja necessário
 const storage = multer.diskStorage({
