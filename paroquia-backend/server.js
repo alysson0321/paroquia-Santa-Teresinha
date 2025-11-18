@@ -5,42 +5,70 @@ const multer = require("multer");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
+const path = require("path"); 
+const fs = require("fs"); 
 
 app.use(cors());
 app.use(express.json());
 
-// Configuração do banco de dados
+// --- CRIA PASTAS DE UPLOAD SE NÃO EXISTIREM ---
+const uploadsDir = path.join(__dirname, 'uploads');
+const bannersDir = path.join(uploadsDir, 'banners');
+const midiasDir = path.join(uploadsDir, 'midias');
+const comprovantesDir = path.join(uploadsDir, 'comprovantes');
+
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+if (!fs.existsSync(bannersDir)) fs.mkdirSync(bannersDir);
+if (!fs.existsSync(midiasDir)) fs.mkdirSync(midiasDir);
+if (!fs.existsSync(comprovantesDir)) fs.mkdirSync(comprovantesDir);
+
+
+// --- CONFIGURAÇÃO DO BANCO DE DADOS---
 const connectionString = process.env.DATABASE_URL;
 
-// Prepara a configuração da conexão
 const connectionConfig = {
   connectionString: connectionString,
 };
 
-// Só ativa o SSL se a string de conexão não for local
-// .env local usa 'localhost'
-if (connectionString && !connectionString.includes("localhost")) {
+if (connectionString && !connectionString.includes("localhost") && !connectionString.includes("127.0.0.1")) {
   connectionConfig.ssl = {
     rejectUnauthorized: false,
   };
 }
 
-// Cria o Pool com a configuração correta (local ou produção)
 const pool = new Pool(connectionConfig);
 
 
 
-// Multer que talvez seja necessário
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/comprovantes/");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
+
+// Storage para Eventos
+const bannerStorage = multer.diskStorage({
+ destination: (req, file, cb) => cb(null, bannersDir),
+ filename: (req, file, cb) => {
+  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  const extensao = path.extname(file.originalname);
+  cb(null, 'banner-' + uniqueSuffix + extensao);
+ }
 });
-const upload = multer({ storage: storage });
+
+// Storage para Mídias
+const midiaStorage = multer.diskStorage({
+ destination: (req, file, cb) => cb(null, midiasDir),
+ filename: (req, file, cb) => {
+  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  const extensao = path.extname(file.originalname);
+  cb(null, 'midia-' + uniqueSuffix + extensao);
+ }
+});
+
+// Middlewares de Upload
+const uploadBannerEvento = multer({ storage: bannerStorage });
+const uploadBannerMidia = multer({ storage: midiaStorage });
+// ------------------------------------------------
+
+// --- TORNAR 'UPLOADS' PÚBLICO ---
+app.use('/uploads', express.static(uploadsDir));
+// ------------------------------------------------
 
 //Rotas ->
 app.get("/", (req, res) => {
@@ -193,86 +221,99 @@ app.get("/pagamentos_dizimo", (req, res) => {
   });
 });
 
-// Rota dos eventos (falta implementar o sistema)
-app.post("/eventos", (req, res) => {
-  const { titulo, data_inicio, data_fim, local, banner } = req.body;
 
-  if (!titulo || !data_inicio || !data_fim || !local || !banner) {
-    return res.status(400).json({
-      erro: "Todos os campos (titulo, data_inicio, data_fim, local, banner) são obrigatórios.",
-    });
-  }
+// Cadastrar eventos
+app.post("/eventos", uploadBannerEvento.single("banner_arquivo"), (req, res) => {
+ const { titulo, data_inicio, data_texto, local } = req.body;
+  if (!req.file) {
+  return res.status(400).json({ erro: 'A imagem do banner é obrigatória.' });
+ }
+  const bannerUrl = `uploads/banners/${req.file.filename}`;
 
-  const query =
-    "INSERT INTO eventos (titulo, data_inicio, data_fim, local, banner) VALUES ($1, $2, $3, $4, $5) RETURNING id";
+ if (!titulo || !data_inicio || !data_texto || !local) {
+  return res.status(400).json({
+   erro: "Todos os campos (titulo, data_inicio, data_texto, local) são obrigatórios.",
+  });
+ }
+
+ const query =
+  "INSERT INTO eventos (titulo, data_inicio, data_texto, local, banner) VALUES ($1, $2, $3, $4, $5) RETURNING id";
+ 
   pool.query(
-    query,
-    [titulo, data_inicio, data_fim, local, banner],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar evento:", err);
-        return res.status(500).json({ erro: "Erro ao cadastrar evento." });
-      }
-      res.status(201).json({
-        mensagem: "Evento cadastrado com sucesso!",
-        id: result.rows[0].id,
-      });
-    }
-  );
+  query,
+  [titulo, data_inicio, data_texto, local, bannerUrl], // Salva a URL
+  (err, result) => {
+   if (err) {
+    console.error("Erro ao cadastrar evento:", err);
+    return res.status(500).json({ erro: "Erro ao cadastrar evento." });
+   }
+   res.status(201).json({
+    mensagem: "Evento cadastrado com sucesso!",
+    id: result.rows[0].id,
+   });
+  }
+ );
 });
 
-// Listar eventos (vai precisar para exibir no front)
+// Listar eventos (para o index.html)
 app.get("/eventos", (req, res) => {
-  const query = "SELECT * FROM eventos ORDER BY data_inicio DESC";
-  pool.query(query, (err, result) => {
-    if (err) {
-      console.error("Erro ao buscar eventos:", err);
-      return res.status(500).json({ erro: "Erro ao buscar eventos." });
-    }
-    res.status(200).json(result.rows);
-  });
-});
-
-// Cadastrar mídia (mesma coisa dos eventos)
-app.post("/midias", (req, res) => {
-  const { titulo, data_evento, banner, link_externo } = req.body;
-
-  if (!titulo || !data_evento || !banner || !link_externo) {
-    return res.status(400).json({
-      erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
-    });
+ const query = "SELECT id, titulo, data_inicio, data_texto, local, banner FROM eventos ORDER BY data_inicio DESC";
+ pool.query(query, (err, result) => {
+  if (err) {
+   console.error("Erro ao buscar eventos:", err);
+   return res.status(500).json({ erro: "Erro ao buscar eventos." });
   }
-
-  const query =
-    "INSERT INTO midias (titulo, data_evento, banner, link_externo) VALUES ($1, $2, $3, $4) RETURNING id";
-  pool.query(
-    query,
-    [titulo, data_evento, banner, link_externo],
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar mídia:", err);
-        return res.status(500).json({ erro: "Erro ao cadastrar mídia." });
-      }
-      res.status(201).json({
-        mensagem: "Mídia cadastrada com sucesso!",
-        id: result.rows[0].id,
-      });
-    }
-  );
+  res.status(200).json(result.rows);
+ });
 });
 
-// Listar mídias (também vai precisar para exibir no front)
-app.get("/midias", (req, res) => {
-  const query = "SELECT * FROM midias ORDER BY data_evento DESC";
-  pool.query(query, (err, result) => {
-    if (err) {
-      console.error("Erro ao buscar mídias:", err);
-      return res.status(500).json({ erro: "Erro ao buscar mídias." });
-    }
-    res.status(200).json(result.rows);
+// Cadastrar mídia
+app.post("/midias", uploadBannerMidia.single("midia_arquivo"), (req, res) => {
+ const { titulo, data_evento, link_externo } = req.body;
+  if (!req.file) {
+  return res.status(400).json({ erro: 'A imagem (capa) da mídia é obrigatória.' });
+ }
+  const bannerUrl = `uploads/midias/${req.file.filename}`;
+
+ if (!titulo || !data_evento || !link_externo) {
+  return res.status(400).json({
+   erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
   });
+ }
+
+ const query =
+  "INSERT INTO midias (titulo, data_evento, banner, link_externo) VALUES ($1, $2, $3, $4) RETURNING id";
+ 
+  pool.query(
+  query,
+  [titulo, data_evento, bannerUrl, link_externo], // Salva a URL
+  (err, result) => {
+   if (err) {
+    console.error("Erro ao cadastrar mídia:", err);
+    return res.status(500).json({ erro: "Erro ao cadastrar mídia." });
+   }
+   res.status(201).json({
+    mensagem: "Mídia cadastrada com sucesso!",
+    id: result.rows[0].id,
+   });
+  }
+ );
 });
 
+// Listar mídias
+app.get("/midias", (req, res) => {
+ const query = "SELECT * FROM midias ORDER BY data_evento DESC";
+ pool.query(query, (err, result) => {
+  if (err) {
+   console.error("Erro ao buscar mídias:", err);
+   return res.status(500).json({ erro: "Erro ao buscar mídias." });
+  }
+  res.status(200).json(result.rows);
+ });
+});
+
+
+// Preciso refazer essa rota completamente
 // Rota para processar pagamentos de dízimo via PIX (não funcional ainda)
 app.post("/pagamentos-dizimo", async (req, res) => {
   let { usuario_id, valor, data_pagamento } = req.body;

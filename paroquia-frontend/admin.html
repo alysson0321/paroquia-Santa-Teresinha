@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <header class="header">
+      <a href="index.html"><button class="back-btn">&#8592;</button></a>
+      <img src="img/1.png" alt="Logo da Paróquia" class="logo" />
+    </header>
+
+    <main class="form-container">
+      <div class="form-box">
+        <h1 style="text-align: center; color: #003366; margin-bottom: 20px">
+          Painel de Administração
+        </h1>
+
+        <div id="admin-feedback" style="text-align: center; font-weight: bold; padding-bottom: 15px;"></div>
+
+        <form id="form-evento-admin" class="admin-form-section">
+          <h2>Cadastrar Novo Evento</h2>
+
+          <label for="evento-titulo">Título do Evento:</label>
+          <input type="text" id="evento-titulo" name="titulo" required />
+          
+          <label for="evento-data-inicio">Data de Início (para ordenação):</label>
+          <input type="date" id="evento-data-inicio" name="data_inicio" required />
+
+          <label for="evento-data-texto">Texto da Data (Ex: "De 22/09 à 01/10"):</label>
+          <input type="text" id="evento-data-texto" name="data_texto" required />
+
+          <label for="evento-local">Local:</label>
+          <input type="text" id="evento-local" name="local" required />
+
+          <label for="evento-banner">Banner do Evento (Imagem):</label>
+          <input type="file" id="evento-banner" name="banner_arquivo" accept="image/*" required />
+
+          <button type="submit" class="btn-enviar">Salvar Evento</button>
+        </form>
+
+        <form id="form-midia-admin" class="admin-form-section">
+          <h2>Cadastrar Nova Mídia</h2>
+
+          <label for="midia-titulo">Título da Mídia:</label>
+          <input type="text" id="midia-titulo" name="titulo" required />
+
+          <label for="midia-data">Data do Evento (da mídia):</label>
+          <input type="date" id="midia-data" name="data_evento" required />
+
+          <label for="midia-link">Link Externo (Google Drive, etc):</label>
+          <input type="url" id="midia-link" name="link_externo" placeholder="https://drive.google.com/..." required />
+
+          <label for="midia-banner">Capa da Mídia (Imagem):</label>
+          <input type="file" id="midia-banner" name="midia_arquivo" accept="image/*" required />
+
+          <button type="submit" class="btn-enviar">Salvar Mídia</button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Paróquia Santa Teresinha do Menino Jesus<br />Jucati-PE</p>
+    </footer>
+
+    <style>
+      .header .logo {
+        margin: 0 auto;
+        height: 60px;
+      }
+      .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 140px);
+        background: #e0e0e0;
+        padding: 20px 0; 
+      }
+      .form-box {
+        background: #f9f9f9;
+        padding: 20px;
+        border: 2px solid #d4a017;
+        border-radius: 6px;
+        width: 90%;
+        max-width: 500px;
+        box-sizing: border-box;
+      }
+      .form-box label {
+        display: block;
+        margin-bottom: 6px;
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+      .form-box input[type="text"],
+      .form-box input[type="date"],
+      .form-box input[type="url"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      .form-box input[type="file"] {
+          width: 100%;
+          margin-top: 5px;
+          margin-bottom: 16px;
+      }
+      .btn-enviar {
+        background: #174a7e;
+        color: white;
+        font-size: 16px;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+      .btn-enviar:hover {
+        background: #12395f;
+      }
+      .footer {
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-size: 14px;
+        bottom: 0;
+        width: 100%;
+      }
+      .admin-form-section {
+        border-top: 2px solid #eee;
+        padding-top: 20px;
+        margin-top: 20px;
+      }
+      .admin-form-section:first-of-type {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0;
+      }
+    </style>
+
+    <script src="app.js"></script>
+    
+  </body>
+</html>

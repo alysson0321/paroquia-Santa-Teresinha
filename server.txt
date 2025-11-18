@@ -1,2 +1,0 @@
-cd C:\Users\Administrator\Desktop\PPO\Programação\paroquia-backend
-nodemon server.js

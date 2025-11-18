@@ -1,143 +1,206 @@
-// subir pro git
+
+//const API_URL = 'http://localhost:3000';
 const API_URL = "https://paroquia-backend.onrender.com";
 
-// localhost
-//const API_URL = 'http://localhost:3000';
 
-// menu lateral da pag incial
-document.addEventListener("DOMContentLoaded", () => {
-  const menuToggle = document.getElementById("menu-toggle");
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("menu-overlay");
-  const menuClose = document.getElementById("menu-close");
+(async () => {
+
+  // --- LÓGICA DO MENU LATERAL (de index.html) ---
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('menu-overlay');
+  const menuClose = document.getElementById('menu-close');
 
   if (menuToggle && sidebar && overlay) {
-    function openMenu() {
-      sidebar.classList.add("open");
-      overlay.classList.add("visible");
-      sidebar.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeMenu() {
-      sidebar.classList.remove("open");
-      overlay.classList.remove("visible");
-      sidebar.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    }
-
-    menuToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openMenu();
-    });
-
-    if (menuClose) menuClose.addEventListener("click", closeMenu);
-    overlay.addEventListener("click", closeMenu);
-
-    sidebar.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") closeMenu();
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && sidebar.classList.contains("open")) closeMenu();
-    });
+    function openMenu() { sidebar.classList.add('open'); overlay.classList.add('visible'); }
+    function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); }
+    menuToggle.addEventListener('click', (e) => { e.stopPropagation(); openMenu(); });
+    if (menuClose) menuClose.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    sidebar.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMenu(); });
   }
-});
 
-// seção do registro de usuário
+  // --- LÓGICA DA SEÇÃO DA CONTA (de conta.html) ---
+  const nomeEl = document.getElementById("usuario-nome");
+  if (nomeEl) { // Só roda na página da conta
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const emailEl = document.getElementById("usuario-email");
+    const listaIntencoes = document.getElementById("lista-intencoes");
+    const listaDizimos = document.getElementById("lista-dizimos");
+
+    if (usuario) {
+      nomeEl.textContent = usuario.nome;
+      emailEl.textContent = usuario.email;
+    }
+    try {
+      if (usuario) {
+        // Busca Intenções
+        const resIntencoes = await fetch(`${API_URL}/intencoes?usuario_id=${usuario.id}`);
+        const intencoes = await resIntencoes.json();
+        if (resIntencoes.ok && intencoes.length > 0) {
+          listaIntencoes.innerHTML = intencoes.map(i => `
+            <div class="intencao-item" id="intencao-${i.id}">
+              <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${i.descricao}</p>
+              <button onclick="removerIntencao(${i.id})" class="btn-remover">Remover</button>
+            </div>
+          `).join("");
+        } else {
+          listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
+        }
+        // Busca Dízimos
+        const resDizimos = await fetch(`${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`);
+        const dizimos = await resDizimos.json();
+        if (resDizimos.ok && dizimos.length > 0) {
+          listaDizimos.innerHTML = dizimos.map(d => `<p>${new Date(d.data_pagamento).toLocaleDateString("pt-BR")} R$ ${d.valor}</p>`).join("");
+        } else {
+          listaDizimos.innerHTML = "<p>Nenhum dízimo registrado.</p>";
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados da conta:", error);
+    }
+  }
+  
+  // --- LÓGICA DO INDEX.HTML (Eventos e Mídias) ---
+  const listaEventosEl = document.getElementById("lista-eventos");
+  if (listaEventosEl) { // Só roda no index.html
+    try {
+      const res = await fetch(`${API_URL}/eventos`); 
+      if (!res.ok) throw new Error("Erro ao buscar eventos");
+      const eventos = await res.json();
+      if (eventos.length > 0) {
+        listaEventosEl.innerHTML = "";
+        eventos.forEach(evento => {
+          const bannerSrc = evento.banner.startsWith('http') ? evento.banner : `${API_URL}/${evento.banner}`;
+          listaEventosEl.innerHTML += `
+            <div class="evento">
+              <img src="${bannerSrc}" alt="${evento.titulo}">
+              <p>${evento.titulo}<br>${evento.data_texto}<br> <small style="color: #d4a017;">${evento.local}</small></p>
+            </div>`;
+        });
+      } else {
+        listaEventosEl.innerHTML = "<p>Nenhum evento futuro cadastrado.</p>";
+      }
+    } catch (error) {
+      console.error("Erro ao carregar eventos:", error);
+      listaEventosEl.innerHTML = "<p>Não foi possível carregar os eventos.</p>";
+    }
+  }
+
+  const listaMidiasEl = document.getElementById("lista-midias");
+  if (listaMidiasEl) { // Só roda no index.html
+    try {
+      const res = await fetch(`${API_URL}/midias`);
+      if (!res.ok) throw new Error("Erro ao buscar mídias");
+      const midias = await res.json();
+      if (midias.length > 0) {
+        listaMidiasEl.innerHTML = "";
+        midias.forEach(midia => {
+          const bannerSrc = midia.banner.startsWith('http') ? midia.banner : `${API_URL}/${midia.banner}`;
+          listaMidiasEl.innerHTML += `
+            <div class="midia">
+              <img src="${bannerSrc}" alt="${midia.titulo}">
+              <p>${midia.titulo}<br>
+                <span style="color: #d4a017;">${new Date(midia.data_evento).toLocaleDateString("pt-BR")}</span><br>
+                <a href="${midia.link_externo}" target="_blank">Acesse as mídias</a>
+              </p>
+            </div>`;
+        });
+      } else {
+        listaMidiasEl.innerHTML = "<p>Nenhuma mídia cadastrada.</p>";
+      }
+    } catch (error) {
+      console.error("Erro ao carregar mídias:", error);
+      listaMidiasEl.innerHTML = "<p>Não foi possível carregar as mídias.</p>";
+    }
+  }
+
+})(); // <-- O '()' aqui executa a função 'async' imediatamente.
+
+// ==========================================================
+// FORMULÁRIOS (Listeners agora rodam sem erro)
+// ==========================================================
+
+// --- SEÇÃO DO REGISTRO DE USUÁRIO ---
 const formRegistro = document.getElementById("form-registro");
-
 if (formRegistro) {
   formRegistro.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
     const confirmar = document.getElementById("confirmar_senha").value;
-
+    const erroEl = formRegistro.querySelector(".erro");
     if (senha !== confirmar) {
-      const erro = document.querySelector(".erro");
-      erro.innerHTML = "As senhas não conferem!";
+      erroEl.innerHTML = "As senhas não conferem!";
       return;
     }
-
     try {
       const res = await fetch(`${API_URL}/usuarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, email, senha }),
       });
-
-      if (!res.ok) throw new Error("Erro no servidor");
-
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.erro || "Erro no servidor");
+      }
       window.location.href = "login.html";
     } catch (err) {
-      console.error(err);
-      alert("Erro ao registrar usuário.");
+      console.error("Erro ao registrar usuário:", err);
+      erroEl.innerHTML = "Erro ao registrar usuário.";
     }
   });
 }
 
-// seção do login de usuário
+// --- SEÇÃO DO LOGIN DE USUÁRIO ---
 const formLogin = document.getElementById("form-login");
-
 if (formLogin) {
   formLogin.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
-
+    const erroEl = formLogin.querySelector(".erro");
     try {
       const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
-        const erro = document.querySelector(".erro");
-        erro.innerHTML = data.erro || "Email ou senha incorretos!";
+        erroEl.innerHTML = data.erro || "Email ou senha incorretos!";
         return;
       }
-
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify({
-          id: data.usuario.id,
-          nome: data.usuario.nome,
-          email: data.usuario.email,
-          token: data.token,
-        })
-      );
-
+      localStorage.setItem("usuario", JSON.stringify({
+        id: data.usuario.id,
+        nome: data.usuario.nome,
+        email: data.usuario.email,
+        token: data.token,
+      }));
       window.location.href = "index.html";
     } catch (error) {
-      console.error(error);
-      alert("Erro ao conectar com o servidor.");
+      console.error("Erro ao conectar com o servidor:", error);
+      erroEl.innerHTML = "Erro ao conectar com o servidor.";
     }
   });
 }
 
-// seção das intenções
+// --- SEÇÃO DAS INTENÇÕES (FORM) ---
 const formIntencao = document.getElementById("form-intencao");
-
 if (formIntencao) {
   formIntencao.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const usuario = JSON.parse(localStorage.getItem("usuario"));
     const descricao = document.getElementById("intencao").value.trim();
     const data_missa = document.getElementById("data_missa").value;
-
+    const resuEl = formIntencao.querySelector(".resu");
     if (!descricao || !data_missa) {
-      alert("Preencha todos os campos obrigatórios.");
+      resuEl.innerHTML = "Preencha todos os campos.";
+      resuEl.style.color = "red";
       return;
     }
-
     try {
       const res = await fetch(`${API_URL}/intencoes`, {
         method: "POST",
@@ -148,98 +211,118 @@ if (formIntencao) {
           data_missa,
         }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
-        alert(data.erro || "Erro ao registrar intenção.");
+        resuEl.innerHTML = data.erro || "Erro ao registrar intenção.";
+        resuEl.style.color = "red";
         return;
       }
-
-      const resu = document.querySelector(".resu");
-      resu.innerHTML = "Intenção registrada com sucesso!";
+      resuEl.innerHTML = "Intenção registrada com sucesso!";
+      resuEl.style.color = "green";
       formIntencao.reset();
     } catch (error) {
       console.error("Erro:", error);
-      alert("Erro de conexão com o servidor.");
+      resuEl.innerHTML = "Erro de conexão com o servidor.";
+      resuEl.style.color = "red";
     }
   });
 }
 
-// seção da conta do usuário
-document.addEventListener("DOMContentLoaded", async () => {
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
-  const nomeEl = document.getElementById("usuario-nome");
-  const emailEl = document.getElementById("usuario-email");
-  const listaIntencoes = document.getElementById("lista-intencoes");
-  const listaDizimos = document.getElementById("lista-dizimos");
+// ==========================================================
+// PÁGINA DE ADMINISTRAÇÃO (admin.html)
+// ==========================================================
+const formEventoAdmin = document.getElementById("form-evento-admin");
+const feedbackEl = document.getElementById("admin-feedback"); 
 
-  if (usuario) {
-    nomeEl.textContent = usuario.nome;
-    emailEl.textContent = usuario.email;
-  }
-
-  try {
-    if (usuario) {
-      const resIntencoes = await fetch(
-        `${API_URL}/intencoes?usuario_id=${usuario.id}`
-      );
-      const intencoes = await resIntencoes.json();
-
-      if (resIntencoes.ok && intencoes.length > 0) {
-        listaIntencoes.innerHTML = intencoes
-          .map(
-            (i) => `
-        <div class="intencao-item" id="intencao-${i.id}">
-        
-              <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${
-              i.descricao
-            }</p>
-          
-              <button onclick="removerIntencao(${
-                i.id
-              })" class="btn-remover">Remover</button>
-        </div>
-   `
-          )
-          .join("");
-      } else {
-        listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
+if (formEventoAdmin) {
+  formEventoAdmin.addEventListener("submit", async (e) => {
+    e.preventDefault(); 
+    if (feedbackEl) feedbackEl.innerHTML = ""; 
+    try {
+      const formData = new FormData();
+      formData.append('titulo', document.getElementById('evento-titulo').value);
+      formData.append('data_inicio', document.getElementById('evento-data-inicio').value);
+      formData.append('data_texto', document.getElementById('evento-data-texto').value);
+      formData.append('local', document.getElementById('evento-local').value);
+      const inputBanner = document.getElementById('evento-banner');
+      if (inputBanner.files.length === 0) {
+        throw new Error("Por favor, selecione uma imagem para o banner.");
       }
-
-      const resDizimos = await fetch(
-        `${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`
-      );
-      const dizimos = await resDizimos.json();
-
-      if (resDizimos.ok && dizimos.length > 0) {
-        listaDizimos.innerHTML = dizimos
-          .map(
-            (d) => `
- <p>${new Date(d.data_pagamento).toLocaleDateString("pt-BR")} R$ ${d.valor}</p>
- `
-          )
-          .join("");
-      } else {
-        listaDizimos.innerHTML = "<p>Nenhum dízimo registrado.</p>";
+      formData.append('banner_arquivo', inputBanner.files[0]);
+      
+      const res = await fetch(`${API_URL}/eventos`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) {
+        const errorData = await res.json(); 
+        throw new Error(errorData.erro || "Erro do servidor.");
+      }
+      const data = await res.json(); 
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
+      }
+      formEventoAdmin.reset(); 
+    } catch (err) {
+      console.error("Erro ao cadastrar evento:", err);
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<p style="color: red;">${err.message}</p>`;
       }
     }
-  } catch (error) {
-    console.error(error);
-  }
-});
+  });
+}
 
-// função para remover intenção
+const formMidiaAdmin = document.getElementById("form-midia-admin");
+if (formMidiaAdmin) {
+  formMidiaAdmin.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (feedbackEl) feedbackEl.innerHTML = "";
+    try {
+      const formData = new FormData();
+      formData.append('titulo', document.getElementById('midia-titulo').value);
+      formData.append('data_evento', document.getElementById('midia-data').value);
+      formData.append('link_externo', document.getElementById('midia-link').value);
+      const inputMidia = document.getElementById('midia-banner');
+      if (inputMidia.files.length === 0) {
+        throw new Error("Por favor, selecione uma imagem para a capa da mídia.");
+      }
+      formData.append('midia_arquivo', inputMidia.files[0]);
+      
+      const res = await fetch(`${API_URL}/midias`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.erro || "Erro do servidor.");
+      }
+      const data = await res.json(); 
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
+      }
+      formMidiaAdmin.reset();
+    } catch (err) {
+      console.error("Erro ao cadastrar mídia:", err);
+      if (feedbackEl) {
+        feedbackEl.innerHTML = `<p style="color: red;">${err.message}</p>`;
+      }
+    }
+  });
+}
+
+// ==========================================================
+// FUNÇÕES GLOBAIS (Chamadas pelo HTML)
+// ==========================================================
+
+// --- FUNÇÃO DE REMOVER INTENÇÃO (da conta.html) ---
 async function removerIntencao(idDaIntencao) {
   if (!confirm("Tem certeza de que deseja remover esta intenção?")) {
     return;
   }
-
   try {
     const res = await fetch(`${API_URL}/intencoes/${idDaIntencao}`, {
       method: "DELETE",
     });
-
     if (!res.ok) {
       let erroMsg = `Erro ${res.status}: ${res.statusText}`;
       try {
@@ -248,16 +331,11 @@ async function removerIntencao(idDaIntencao) {
       } catch (e) {}
       throw new Error(erroMsg);
     }
-
     const data = await res.json();
-
-    const elementoParaRemover = document.getElementById(
-      `intencao-${idDaIntencao}`
-    );
+    const elementoParaRemover = document.getElementById(`intencao-${idDaIntencao}`);
     if (elementoParaRemover) {
       elementoParaRemover.remove();
     }
-
     const listaIntencoes = document.getElementById("lista-intencoes");
     if (listaIntencoes.children.length === 0) {
       listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
