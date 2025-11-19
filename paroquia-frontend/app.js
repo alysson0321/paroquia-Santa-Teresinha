@@ -42,7 +42,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
           listaIntencoes.innerHTML = intencoes.map(i => `
             <div class="intencao-item" id="intencao-${i.id}">
               <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${i.descricao}</p>
-              <button onclick="removerIntencao(${i.id})" class="btn-remover">Remover</button>
+              <button onclick="removerIntencao(${i.id})" class="btn-remover">🗑️</button>
             </div>
           `).join("");
         } else {

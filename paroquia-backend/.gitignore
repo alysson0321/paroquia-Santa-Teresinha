@@ -3,7 +3,3 @@ node_modules
 
 # Ignorar arquivo de variáveis de ambiente 
 .env
-
-# Ignorar arquivos de teste
-server.txt
-testes post.txt
