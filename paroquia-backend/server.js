@@ -11,7 +11,7 @@ const fs = require("fs");
 app.use(cors());
 app.use(express.json());
 
-// --- CRIA PASTAS DE UPLOAD SE NÃO EXISTIREM ---
+// criar pastas de upload se não existirem
 const uploadsDir = path.join(__dirname, 'uploads');
 const bannersDir = path.join(uploadsDir, 'banners');
 const midiasDir = path.join(uploadsDir, 'midias');
@@ -23,7 +23,7 @@ if (!fs.existsSync(midiasDir)) fs.mkdirSync(midiasDir);
 if (!fs.existsSync(comprovantesDir)) fs.mkdirSync(comprovantesDir);
 
 
-// --- CONFIGURAÇÃO DO BANCO DE DADOS---
+// config do bd
 const connectionString = process.env.DATABASE_URL;
 
 const connectionConfig = {
@@ -41,7 +41,7 @@ const pool = new Pool(connectionConfig);
 
 
 
-// Storage para Eventos
+// config multer eventos e midias ---
 const bannerStorage = multer.diskStorage({
  destination: (req, file, cb) => cb(null, bannersDir),
  filename: (req, file, cb) => {
@@ -51,7 +51,6 @@ const bannerStorage = multer.diskStorage({
  }
 });
 
-// Storage para Mídias
 const midiaStorage = multer.diskStorage({
  destination: (req, file, cb) => cb(null, midiasDir),
  filename: (req, file, cb) => {
@@ -61,25 +60,23 @@ const midiaStorage = multer.diskStorage({
  }
 });
 
-// Middlewares de Upload
+// instâncias do multer
 const uploadBannerEvento = multer({ storage: bannerStorage });
 const uploadBannerMidia = multer({ storage: midiaStorage });
-// ------------------------------------------------
 
-// --- TORNAR 'UPLOADS' PÚBLICO ---
+
 app.use('/uploads', express.static(uploadsDir));
-// ------------------------------------------------
 
-//Rotas ->
+//rotas ->
 app.get("/", (req, res) => {
-  res.send("API da paróquia está funcionando!");
+  res.send("Servidor da Paróquia Santa Teresinha");
 });
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
 
-//Cadastro usuario
+//cadastro usuario
 app.post("/usuarios", (req, res) => {
   const { nome, email, senha } = req.body;
 
@@ -105,7 +102,7 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
-//Login usuario
+//login usuario
 app.post("/login", (req, res) => {
   const { email, senha } = req.body;
 
@@ -135,7 +132,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Rota para cadastrar intenção da missa
+// rota para cadastrar intenção da missa
 app.post("/intencoes", (req, res) => {
   const { usuario_id, descricao, data_missa } = req.body;
 
@@ -161,7 +158,7 @@ app.post("/intencoes", (req, res) => {
   });
 });
 
-//listar intenções por usuário
+// listar intenções por usuário
 app.get("/intencoes", (req, res) => {
   const usuario_id = req.query.usuario_id;
 
@@ -179,7 +176,7 @@ app.get("/intencoes", (req, res) => {
   });
 });
 
-//Remover intenções
+// remover intenções
 app.delete("/intencoes/:id", (req, res) => {
   const { id } = req.params;
 
@@ -203,7 +200,7 @@ app.delete("/intencoes/:id", (req, res) => {
   });
 });
 
-//Listar dízimos por usuário (falta implementar o pagamento)
+// listar dízimos por usuário (falta implementar o pagamento)
 app.get("/pagamentos_dizimo", (req, res) => {
   const usuario_id = req.query.usuario_id;
 
@@ -222,7 +219,7 @@ app.get("/pagamentos_dizimo", (req, res) => {
 });
 
 
-// Cadastrar eventos
+// cadastrar eventos
 app.post("/eventos", uploadBannerEvento.single("banner_arquivo"), (req, res) => {
  const { titulo, data_inicio, data_texto, local } = req.body;
   if (!req.file) {
@@ -241,7 +238,7 @@ app.post("/eventos", uploadBannerEvento.single("banner_arquivo"), (req, res) => 
  
   pool.query(
   query,
-  [titulo, data_inicio, data_texto, local, bannerUrl], // Salva a URL
+  [titulo, data_inicio, data_texto, local, bannerUrl], 
   (err, result) => {
    if (err) {
     console.error("Erro ao cadastrar evento:", err);
@@ -255,7 +252,7 @@ app.post("/eventos", uploadBannerEvento.single("banner_arquivo"), (req, res) => 
  );
 });
 
-// Listar eventos (para o index.html)
+// listar eventos - index.html
 app.get("/eventos", (req, res) => {
  const query = "SELECT id, titulo, data_inicio, data_texto, local, banner FROM eventos ORDER BY data_inicio DESC";
  pool.query(query, (err, result) => {
@@ -267,7 +264,7 @@ app.get("/eventos", (req, res) => {
  });
 });
 
-// Cadastrar mídia
+// cadastrar mídia
 app.post("/midias", uploadBannerMidia.single("midia_arquivo"), (req, res) => {
  const { titulo, data_evento, link_externo } = req.body;
   if (!req.file) {
@@ -300,7 +297,7 @@ app.post("/midias", uploadBannerMidia.single("midia_arquivo"), (req, res) => {
  );
 });
 
-// Listar mídias
+// listar mídias
 app.get("/midias", (req, res) => {
  const query = "SELECT * FROM midias ORDER BY data_evento DESC";
  pool.query(query, (err, result) => {
@@ -313,8 +310,8 @@ app.get("/midias", (req, res) => {
 });
 
 
-// Preciso refazer essa rota completamente
-// Rota para processar pagamentos de dízimo via PIX (não funcional ainda)
+// preciso refazer essa rota completamente
+// rota para processar pagamentos de dízimo via PIX (não funcional ainda)
 app.post("/pagamentos-dizimo", async (req, res) => {
   let { usuario_id, valor, data_pagamento } = req.body;
 

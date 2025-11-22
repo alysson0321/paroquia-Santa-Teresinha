@@ -1,30 +1,47 @@
-
-//const API_URL = 'http://localhost:3000';
+//const API_URL = "http://localhost:3000";
 const API_URL = "https://paroquia-backend.onrender.com";
 
-
 (async () => {
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-  // --- LÓGICA DO MENU LATERAL (de index.html) ---
-  const menuToggle = document.getElementById('menu-toggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('menu-overlay');
-  const menuClose = document.getElementById('menu-close');
-
-  if (menuToggle && sidebar && overlay) {
-    function openMenu() { sidebar.classList.add('open'); overlay.classList.add('visible'); }
-    function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); }
-    menuToggle.addEventListener('click', (e) => { e.stopPropagation(); openMenu(); });
-    if (menuClose) menuClose.addEventListener('click', closeMenu);
-    overlay.addEventListener('click', closeMenu);
-    sidebar.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('open')) closeMenu(); });
+  // mostrar link admin se for admin
+  const linkAdmin = document.getElementById("link-admin");
+  if (linkAdmin && usuario && usuario.tipo_usuario === "admin") {
+    linkAdmin.style.display = "block"; 
   }
 
-  // --- LÓGICA DA SEÇÃO DA CONTA (de conta.html) ---
+  // menu lateral
+  const menuToggle = document.getElementById("menu-toggle");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("menu-overlay");
+  const menuClose = document.getElementById("menu-close");
+
+  if (menuToggle && sidebar && overlay) {
+    function openMenu() {
+      sidebar.classList.add("open");
+      overlay.classList.add("visible");
+    }
+    function closeMenu() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("visible");
+    }
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openMenu();
+    });
+    if (menuClose) menuClose.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+    sidebar.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") closeMenu();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && sidebar.classList.contains("open")) closeMenu();
+    });
+  }
+
+  // seção da conta do usuário
   const nomeEl = document.getElementById("usuario-nome");
-  if (nomeEl) { // Só roda na página da conta
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
+  if (nomeEl) {
     const emailEl = document.getElementById("usuario-email");
     const listaIntencoes = document.getElementById("lista-intencoes");
     const listaDizimos = document.getElementById("lista-dizimos");
@@ -35,24 +52,41 @@ const API_URL = "https://paroquia-backend.onrender.com";
     }
     try {
       if (usuario) {
-        // Busca Intenções
-        const resIntencoes = await fetch(`${API_URL}/intencoes?usuario_id=${usuario.id}`);
+        const resIntencoes = await fetch(
+          `${API_URL}/intencoes?usuario_id=${usuario.id}`
+        );
         const intencoes = await resIntencoes.json();
         if (resIntencoes.ok && intencoes.length > 0) {
-          listaIntencoes.innerHTML = intencoes.map(i => `
+          listaIntencoes.innerHTML = intencoes
+            .map(
+              (i) => `
             <div class="intencao-item" id="intencao-${i.id}">
-              <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${i.descricao}</p>
-              <button onclick="removerIntencao(${i.id})" class="btn-remover">🗑️</button>
+              <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${
+                i.descricao
+              }</p>
+              <button onclick="removerIntencao(${
+                i.id
+              })" class="btn-remover">🗑️</button>
             </div>
-          `).join("");
+          `
+            )
+            .join("");
         } else {
           listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
         }
-        // Busca Dízimos
-        const resDizimos = await fetch(`${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`);
+        const resDizimos = await fetch(
+          `${API_URL}/pagamentos_dizimo?usuario_id=${usuario.id}`
+        );
         const dizimos = await resDizimos.json();
         if (resDizimos.ok && dizimos.length > 0) {
-          listaDizimos.innerHTML = dizimos.map(d => `<p>${new Date(d.data_pagamento).toLocaleDateString("pt-BR")} R$ ${d.valor}</p>`).join("");
+          listaDizimos.innerHTML = dizimos
+            .map(
+              (d) =>
+                `<p>${new Date(d.data_pagamento).toLocaleDateString(
+                  "pt-BR"
+                )} R$ ${d.valor}</p>`
+            )
+            .join("");
         } else {
           listaDizimos.innerHTML = "<p>Nenhum dízimo registrado.</p>";
         }
@@ -61,18 +95,20 @@ const API_URL = "https://paroquia-backend.onrender.com";
       console.error("Erro ao carregar dados da conta:", error);
     }
   }
-  
-  // --- LÓGICA DO INDEX.HTML (Eventos e Mídias) ---
+
+  // index.html - carregar eventos e mídias
   const listaEventosEl = document.getElementById("lista-eventos");
-  if (listaEventosEl) { // Só roda no index.html
+  if (listaEventosEl) {
     try {
-      const res = await fetch(`${API_URL}/eventos`); 
+      const res = await fetch(`${API_URL}/eventos`);
       if (!res.ok) throw new Error("Erro ao buscar eventos");
       const eventos = await res.json();
       if (eventos.length > 0) {
         listaEventosEl.innerHTML = "";
-        eventos.forEach(evento => {
-          const bannerSrc = evento.banner.startsWith('http') ? evento.banner : `${API_URL}/${evento.banner}`;
+        eventos.forEach((evento) => {
+          const bannerSrc = evento.banner.startsWith("http")
+            ? evento.banner
+            : `${API_URL}/${evento.banner}`;
           listaEventosEl.innerHTML += `
             <div class="evento">
               <img src="${bannerSrc}" alt="${evento.titulo}">
@@ -89,21 +125,27 @@ const API_URL = "https://paroquia-backend.onrender.com";
   }
 
   const listaMidiasEl = document.getElementById("lista-midias");
-  if (listaMidiasEl) { // Só roda no index.html
+  if (listaMidiasEl) {
     try {
       const res = await fetch(`${API_URL}/midias`);
       if (!res.ok) throw new Error("Erro ao buscar mídias");
       const midias = await res.json();
       if (midias.length > 0) {
         listaMidiasEl.innerHTML = "";
-        midias.forEach(midia => {
-          const bannerSrc = midia.banner.startsWith('http') ? midia.banner : `${API_URL}/${midia.banner}`;
+        midias.forEach((midia) => {
+          const bannerSrc = midia.banner.startsWith("http")
+            ? midia.banner
+            : `${API_URL}/${midia.banner}`;
           listaMidiasEl.innerHTML += `
             <div class="midia">
               <img src="${bannerSrc}" alt="${midia.titulo}">
               <p>${midia.titulo}<br>
-                <span style="color: #d4a017;">${new Date(midia.data_evento).toLocaleDateString("pt-BR")}</span><br>
-                <a href="${midia.link_externo}" target="_blank">Acesse as mídias</a>
+                <span style="color: #d4a017;">${new Date(
+                  midia.data_evento
+                ).toLocaleDateString("pt-BR")}</span><br>
+                <a href="${
+                  midia.link_externo
+                }" target="_blank">Acesse as mídias</a>
               </p>
             </div>`;
         });
@@ -115,14 +157,9 @@ const API_URL = "https://paroquia-backend.onrender.com";
       listaMidiasEl.innerHTML = "<p>Não foi possível carregar as mídias.</p>";
     }
   }
+})(); 
 
-})(); // <-- O '()' aqui executa a função 'async' imediatamente.
-
-// ==========================================================
-// FORMULÁRIOS (Listeners agora rodam sem erro)
-// ==========================================================
-
-// --- SEÇÃO DO REGISTRO DE USUÁRIO ---
+// seção do registro do usuário
 const formRegistro = document.getElementById("form-registro");
 if (formRegistro) {
   formRegistro.addEventListener("submit", async (e) => {
@@ -154,7 +191,7 @@ if (formRegistro) {
   });
 }
 
-// --- SEÇÃO DO LOGIN DE USUÁRIO ---
+// seção do login do usuário
 const formLogin = document.getElementById("form-login");
 if (formLogin) {
   formLogin.addEventListener("submit", async (e) => {
@@ -173,12 +210,16 @@ if (formLogin) {
         erroEl.innerHTML = data.erro || "Email ou senha incorretos!";
         return;
       }
-      localStorage.setItem("usuario", JSON.stringify({
-        id: data.usuario.id,
-        nome: data.usuario.nome,
-        email: data.usuario.email,
-        token: data.token,
-      }));
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify({
+          id: data.usuario.id,
+          nome: data.usuario.nome,
+          email: data.usuario.email,
+          tipo_usuario: data.usuario.tipo_usuario,
+          token: data.token,
+        })
+      );
       window.location.href = "index.html";
     } catch (error) {
       console.error("Erro ao conectar com o servidor:", error);
@@ -187,7 +228,7 @@ if (formLogin) {
   });
 }
 
-// --- SEÇÃO DAS INTENÇÕES (FORM) ---
+// cadastrar intenção
 const formIntencao = document.getElementById("form-intencao");
 if (formIntencao) {
   formIntencao.addEventListener("submit", async (e) => {
@@ -228,41 +269,45 @@ if (formIntencao) {
   });
 }
 
-// ==========================================================
-// PÁGINA DE ADMINISTRAÇÃO (admin.html)
-// ==========================================================
+// página do admin - add eventos e mídias
 const formEventoAdmin = document.getElementById("form-evento-admin");
-const feedbackEl = document.getElementById("admin-feedback"); 
+const feedbackEl = document.getElementById("admin-feedback");
 
 if (formEventoAdmin) {
   formEventoAdmin.addEventListener("submit", async (e) => {
-    e.preventDefault(); 
-    if (feedbackEl) feedbackEl.innerHTML = ""; 
+    e.preventDefault();
+    if (feedbackEl) feedbackEl.innerHTML = "";
     try {
       const formData = new FormData();
-      formData.append('titulo', document.getElementById('evento-titulo').value);
-      formData.append('data_inicio', document.getElementById('evento-data-inicio').value);
-      formData.append('data_texto', document.getElementById('evento-data-texto').value);
-      formData.append('local', document.getElementById('evento-local').value);
-      const inputBanner = document.getElementById('evento-banner');
+      formData.append("titulo", document.getElementById("evento-titulo").value);
+      formData.append(
+        "data_inicio",
+        document.getElementById("evento-data-inicio").value
+      );
+      formData.append(
+        "data_texto",
+        document.getElementById("evento-data-texto").value
+      );
+      formData.append("local", document.getElementById("evento-local").value);
+      const inputBanner = document.getElementById("evento-banner");
       if (inputBanner.files.length === 0) {
         throw new Error("Por favor, selecione uma imagem para o banner.");
       }
-      formData.append('banner_arquivo', inputBanner.files[0]);
-      
+      formData.append("banner_arquivo", inputBanner.files[0]);
+
       const res = await fetch(`${API_URL}/eventos`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       if (!res.ok) {
-        const errorData = await res.json(); 
+        const errorData = await res.json();
         throw new Error(errorData.erro || "Erro do servidor.");
       }
-      const data = await res.json(); 
+      const data = await res.json();
       if (feedbackEl) {
         feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
       }
-      formEventoAdmin.reset(); 
+      formEventoAdmin.reset();
     } catch (err) {
       console.error("Erro ao cadastrar evento:", err);
       if (feedbackEl) {
@@ -279,24 +324,32 @@ if (formMidiaAdmin) {
     if (feedbackEl) feedbackEl.innerHTML = "";
     try {
       const formData = new FormData();
-      formData.append('titulo', document.getElementById('midia-titulo').value);
-      formData.append('data_evento', document.getElementById('midia-data').value);
-      formData.append('link_externo', document.getElementById('midia-link').value);
-      const inputMidia = document.getElementById('midia-banner');
+      formData.append("titulo", document.getElementById("midia-titulo").value);
+      formData.append(
+        "data_evento",
+        document.getElementById("midia-data").value
+      );
+      formData.append(
+        "link_externo",
+        document.getElementById("midia-link").value
+      );
+      const inputMidia = document.getElementById("midia-banner");
       if (inputMidia.files.length === 0) {
-        throw new Error("Por favor, selecione uma imagem para a capa da mídia.");
+        throw new Error(
+          "Por favor, selecione uma imagem para a capa da mídia."
+        );
       }
-      formData.append('midia_arquivo', inputMidia.files[0]);
-      
+      formData.append("midia_arquivo", inputMidia.files[0]);
+
       const res = await fetch(`${API_URL}/midias`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.erro || "Erro do servidor.");
       }
-      const data = await res.json(); 
+      const data = await res.json();
       if (feedbackEl) {
         feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
       }
@@ -310,11 +363,7 @@ if (formMidiaAdmin) {
   });
 }
 
-// ==========================================================
-// FUNÇÕES GLOBAIS (Chamadas pelo HTML)
-// ==========================================================
-
-// --- FUNÇÃO DE REMOVER INTENÇÃO (da conta.html) ---
+// remover intenção
 async function removerIntencao(idDaIntencao) {
   if (!confirm("Tem certeza de que deseja remover esta intenção?")) {
     return;
@@ -332,7 +381,9 @@ async function removerIntencao(idDaIntencao) {
       throw new Error(erroMsg);
     }
     const data = await res.json();
-    const elementoParaRemover = document.getElementById(`intencao-${idDaIntencao}`);
+    const elementoParaRemover = document.getElementById(
+      `intencao-${idDaIntencao}`
+    );
     if (elementoParaRemover) {
       elementoParaRemover.remove();
     }

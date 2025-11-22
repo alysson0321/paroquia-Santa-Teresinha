@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
   </head>
+
+  <script>
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
+
+    //verifica se o usuário é admin
+    if (!usuarioLogado || usuarioLogado.tipo_usuario !== "admin") {
+      alert("Acesso restrito! Você será redirecionado.");
+      window.location.href = "index.html"; 
+    }
+  </script>
+
   <body>
     <header class="header">
       <a href="index.html"><button class="back-btn">&#8592;</button></a>
@@ -19,25 +30,48 @@
           Painel de Administração
         </h1>
 
-        <div id="admin-feedback" style="text-align: center; font-weight: bold; padding-bottom: 15px;"></div>
+        <div
+          id="admin-feedback"
+          style="text-align: center; font-weight: bold; padding-bottom: 15px"
+        ></div>
 
         <form id="form-evento-admin" class="admin-form-section">
           <h2>Cadastrar Novo Evento</h2>
 
           <label for="evento-titulo">Título do Evento:</label>
           <input type="text" id="evento-titulo" name="titulo" required />
-          
-          <label for="evento-data-inicio">Data de Início (para ordenação):</label>
-          <input type="date" id="evento-data-inicio" name="data_inicio" required />
 
-          <label for="evento-data-texto">Texto da Data (Ex: "De 22/09 à 01/10"):</label>
-          <input type="text" id="evento-data-texto" name="data_texto" required />
+          <label for="evento-data-inicio"
+            >Data de Início (para ordenação):</label
+          >
+          <input
+            type="date"
+            id="evento-data-inicio"
+            name="data_inicio"
+            required
+          />
+
+          <label for="evento-data-texto"
+            >Texto da Data (Ex: "De 22/09 à 01/10"):</label
+          >
+          <input
+            type="text"
+            id="evento-data-texto"
+            name="data_texto"
+            required
+          />
 
           <label for="evento-local">Local:</label>
           <input type="text" id="evento-local" name="local" required />
 
           <label for="evento-banner">Banner do Evento (Imagem):</label>
-          <input type="file" id="evento-banner" name="banner_arquivo" accept="image/*" required />
+          <input
+            type="file"
+            id="evento-banner"
+            name="banner_arquivo"
+            accept="image/*"
+            required
+          />
 
           <button type="submit" class="btn-enviar">Salvar Evento</button>
         </form>
@@ -52,10 +86,22 @@
           <input type="date" id="midia-data" name="data_evento" required />
 
           <label for="midia-link">Link Externo (Google Drive, etc):</label>
-          <input type="url" id="midia-link" name="link_externo" placeholder="https://drive.google.com/..." required />
+          <input
+            type="url"
+            id="midia-link"
+            name="link_externo"
+            placeholder="https://drive.google.com/..."
+            required
+          />
 
           <label for="midia-banner">Capa da Mídia (Imagem):</label>
-          <input type="file" id="midia-banner" name="midia_arquivo" accept="image/*" required />
+          <input
+            type="file"
+            id="midia-banner"
+            name="midia_arquivo"
+            accept="image/*"
+            required
+          />
 
           <button type="submit" class="btn-enviar">Salvar Mídia</button>
         </form>
@@ -77,7 +123,7 @@
         align-items: center;
         min-height: calc(100vh - 140px);
         background: #e0e0e0;
-        padding: 20px 0; 
+        padding: 20px 0;
       }
       .form-box {
         background: #f9f9f9;
@@ -107,9 +153,9 @@
         box-sizing: border-box;
       }
       .form-box input[type="file"] {
-          width: 100%;
-          margin-top: 5px;
-          margin-bottom: 16px;
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 16px;
       }
       .btn-enviar {
         background: #174a7e;
@@ -146,6 +192,5 @@
     </style>
 
     <script src="app.js"></script>
-    
   </body>
 </html>

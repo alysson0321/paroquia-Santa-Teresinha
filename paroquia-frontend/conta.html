@@ -137,37 +137,36 @@
       }
 
       .intencao-item {
-      display: flex;
-      justify-content: space-between; 
-      align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .intencao-item p {
-      margin: 0; 
-      flex-grow: 1;
-      margin-right: 10px; 
-      overflow-wrap: break-word; 
-      text-wrap: wrap;
-    }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+      }
 
-    .btn-remover {
-      background-color: #e63946; 
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 3px 7px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      flex-shrink: 0; 
-    }
-    
-    .btn-remover:hover {
-      background-color: #c91825;
-    }
+      .intencao-item p {
+        margin: 0;
+        flex-grow: 1;
+        margin-right: 10px;
+        overflow-wrap: break-word;
+        text-wrap: wrap;
+      }
 
- 
+      .btn-remover {
+        background-color: #e63946;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 3px 7px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .btn-remover:hover {
+        background-color: #c91825;
+      }
+
       footer {
         color: white;
         text-align: center;
@@ -182,7 +181,6 @@
     </style>
     <script src="app.js"></script>
     <script>
-      
       //ver se o usuário está logado
       const usuarioLogado = localStorage.getItem("usuario");
       if (!usuarioLogado) {
