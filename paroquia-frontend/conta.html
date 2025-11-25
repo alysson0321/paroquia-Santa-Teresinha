@@ -45,6 +45,32 @@
       </div>
     </div>
 
+    <div id="modal-edicao" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Editar Intenção</h3>
+
+        <div class="campo">
+          <label>Descrição:</label>
+          <input
+            type="text"
+            id="edit-descricao"
+          />
+        </div>
+
+        <div class="campo">
+          <label>Data da Missa:</label>
+          <input type="date" id="edit-data" />
+        </div>
+
+        <div class="modal-botoes">
+          <button onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
+          <button onclick="salvarEdicao()" class="btn-salvar">
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+
     <footer>
       Paróquia Santa Teresinha do Menino Jesus <br />
       Jucati-PE
@@ -68,10 +94,82 @@
       header img {
         height: 60px;
       }
+      .modal-overlay {
+        display: none; /* Começa escondido */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
 
+      .modal-box {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px; /* Não deixa ficar gigante no PC */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-top: 5px solid #d4a017; /* Toque dourado da paróquia */
+      }
+
+      .modal-box h3 {
+        margin-top: 0;
+        color: #003366;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-box .campo {
+        margin-bottom: 15px;
+      }
+
+      .modal-box input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      .modal-botoes {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+
+      .btn-salvar {
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .btn-cancelar {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .btn-salvar:hover {
+        background-color: #002244;
+      }
+      .btn-cancelar:hover {
+        background-color: #bbb;
+      }
       .usuario-email {
         word-break: break-all;
-        overflow-wrap: break-word ;
+        overflow-wrap: break-word;
       }
       .out-btn {
         position: absolute;
@@ -157,7 +255,7 @@
         text-wrap: wrap;
       }
 
-      .btn-remover {
+      .btn-remover, .btn-editar {
         background-color: #d49e17bd;
         color: white;
         border: none;
@@ -167,7 +265,9 @@
         cursor: pointer;
         flex-shrink: 0;
       }
-
+      .btn-editar:hover {
+        background-color: #003701;
+      }
       .btn-remover:hover {
         background-color: #c91825;
       }

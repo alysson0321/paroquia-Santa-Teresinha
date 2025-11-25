@@ -7,7 +7,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
   // mostrar link admin se for admin
   const linkAdmin = document.getElementById("link-admin");
   if (linkAdmin && usuario && usuario.tipo_usuario === "admin") {
-    linkAdmin.style.display = "block"; 
+    linkAdmin.style.display = "block";
   }
 
   // menu lateral
@@ -58,18 +58,39 @@ const API_URL = "https://paroquia-backend.onrender.com";
         const intencoes = await resIntencoes.json();
         if (resIntencoes.ok && intencoes.length > 0) {
           listaIntencoes.innerHTML = intencoes
-            .map(
-              (i) => `
-            <div class="intencao-item" id="intencao-${i.id}">
-              <p>${new Date(i.data_missa).toLocaleDateString("pt-BR")}: ${
-                i.descricao
-              }</p>
-              <button onclick="removerIntencao(${
-                i.id
-              })" class="btn-remover">🗑️</button>
+            .map((i) => {
+              const dataDisplay = new Date(i.data_missa).toLocaleDateString(
+                "pt-BR",
+                { timeZone: "UTC" }
+              );
+
+              const dataISO = i.data_missa.split("T")[0];
+              const descricaoSegura = i.descricao.replace(/'/g, "\\'");
+
+              return `
+          <div class="intencao-item" id="intencao-${i.id}">
+            <div class="info" style="flex: 1;" style="color: #aa7e0eff">
+              <strong>${dataDisplay}</strong>: ${i.descricao}
             </div>
-          `
-            )
+            
+            <div class="acoes" style="display: flex; gap: 10px;">
+              <button 
+                onclick="editarIntencao(${i.id}, '${descricaoSegura}', '${dataISO}')" 
+                class="btn-icone btn-editar" 
+                title="Editar Intenção">
+                ✏️
+              </button>
+              
+              <button 
+                onclick="removerIntencao(${i.id})" 
+                class="btn-icone btn-remover" 
+                title="Remover Intenção">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+            })
             .join("");
         } else {
           listaIntencoes.innerHTML = "<p>Nenhuma intenção registrada.</p>";
@@ -157,7 +178,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
       listaMidiasEl.innerHTML = "<p>Não foi possível carregar as mídias.</p>";
     }
   }
-})(); 
+})();
 
 // seção do registro do usuário
 const formRegistro = document.getElementById("form-registro");
@@ -394,5 +415,50 @@ async function removerIntencao(idDaIntencao) {
   } catch (error) {
     console.error("Erro ao remover intenção:", error);
     alert(error.message);
+  }
+}
+// editar intenção
+let idEdicaoAtual = null;
+
+function editarIntencao(id, textoAtual, dataAtual) {
+  idEdicaoAtual = id;
+
+  document.getElementById("edit-descricao").value = textoAtual;
+  document.getElementById("edit-data").value = dataAtual;
+
+  document.getElementById("modal-edicao").style.display = "flex";
+}
+
+function fecharModal() {
+  document.getElementById("modal-edicao").style.display = "none";
+  idEdicaoAtual = null;
+}
+
+async function salvarEdicao() {
+  if (!idEdicaoAtual) return;
+
+  const novoTexto = document.getElementById("edit-descricao").value;
+  const novaData = document.getElementById("edit-data").value;
+
+  if (!novoTexto || !novaData) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/intencoes/${idEdicaoAtual}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ descricao: novoTexto, data_missa: novaData }),
+    });
+
+    if (res.ok) {
+      window.location.reload();
+    } else {
+      alert("Erro ao atualizar.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Erro de conexão.");
   }
 }

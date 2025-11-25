@@ -64,7 +64,6 @@ const midiaStorage = multer.diskStorage({
 const uploadBannerEvento = multer({ storage: bannerStorage });
 const uploadBannerMidia = multer({ storage: midiaStorage });
 
-
 app.use('/uploads', express.static(uploadsDir));
 
 //rotas ->
@@ -198,6 +197,21 @@ app.delete("/intencoes/:id", (req, res) => {
 
     res.status(200).json({ mensagem: "Intenção removida com sucesso!" });
   });
+});
+
+// atualizar intenção
+app.put("/intencoes/:id", async (req, res) => {
+  const { id } = req.params;
+  const { descricao, data_missa } = req.body;
+
+  try {
+    const sql = "UPDATE intencoes_missa SET descricao = $1, data_missa = $2 WHERE id = $3";
+    await pool.query(sql, [descricao, data_missa, id]);
+    res.status(200).json({ mensagem: "Intenção atualizada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao atualizar intenção:", error);
+    res.status(500).json({ erro: "Erro ao atualizar no banco de dados." });
+  }
 });
 
 // listar dízimos por usuário (falta implementar o pagamento)
