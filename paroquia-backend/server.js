@@ -237,43 +237,31 @@ app.get("/pagamentos_dizimo", (req, res) => {
 });
 
 // cadastrar eventos
-app.post(
-  "/eventos",
-  uploadBannerEvento.single("banner_arquivo"),
-  (req, res) => {
-    const { titulo, data_inicio, data_texto, local } = req.body;
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ erro: "A imagem do banner é obrigatória." });
-    }
-    const bannerUrl = `uploads/banners/${req.file.filename}`;
+app.post("/eventos", upload.single('banner'), async (req, res) => {
+  const { titulo, data_inicio, data_texto, local } = req.body;
+  const file = req.file;
 
-    if (!titulo || !data_inicio || !data_texto || !local) {
-      return res.status(400).json({
-        erro: "Todos os campos (titulo, data_inicio, data_texto, local) são obrigatórios.",
-      });
-    }
-
-    const query =
-      "INSERT INTO eventos (titulo, data_inicio, data_texto, local, banner) VALUES ($1, $2, $3, $4, $5) RETURNING id";
-
-    pool.query(
-      query,
-      [titulo, data_inicio, data_texto, local, bannerUrl],
-      (err, result) => {
-        if (err) {
-          console.error("Erro ao cadastrar evento:", err);
-          return res.status(500).json({ erro: "Erro ao cadastrar evento." });
-        }
-        res.status(201).json({
-          mensagem: "Evento cadastrado com sucesso!",
-          id: result.rows[0].id,
-        });
-      }
-    );
+  if (!titulo || !data_inicio || !data_texto || !local || !file) {
+    return res.status(400).json({ erro: "Todos os campos e o banner são obrigatórios." });
   }
-);
+
+  try {
+    const bannerBase64 = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+
+    const sql = `
+      INSERT INTO eventos (titulo, data_inicio, data_texto, local, banner) 
+      VALUES ($1, $2, $3, $4, $5) RETURNING id
+    `;
+    
+    await pool.query(sql, [titulo, data_inicio, data_texto, local, bannerBase64]);
+    
+    res.status(201).json({ mensagem: "Evento criado com sucesso!" });
+
+  } catch (error) {
+    console.error("Erro ao criar evento:", error);
+    res.status(500).json({ erro: "Erro ao salvar no banco." });
+  }
+});
 
 // listar eventos - index.html
 app.get("/eventos", (req, res) => {
@@ -289,38 +277,30 @@ app.get("/eventos", (req, res) => {
 });
 
 // cadastrar mídia
-app.post("/midias", uploadBannerMidia.single("midia_arquivo"), (req, res) => {
+app.post("/midias", upload.single('banner'), async (req, res) => {
   const { titulo, data_evento, link_externo } = req.body;
-  if (!req.file) {
-    return res
-      .status(400)
-      .json({ erro: "A imagem (capa) da mídia é obrigatória." });
-  }
-  const bannerUrl = `uploads/midias/${req.file.filename}`;
+  const file = req.file;
 
-  if (!titulo || !data_evento || !link_externo) {
-    return res.status(400).json({
-      erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
-    });
+  if (!titulo || !data_evento || !link_externo || !file) {
+    return res.status(400).json({ erro: "Preencha todos os campos e envie uma capa." });
   }
 
-  const query =
-    "INSERT INTO midias (titulo, data_evento, banner, link_externo) VALUES ($1, $2, $3, $4) RETURNING id";
+  try {
+    const bannerBase64 = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
 
-  pool.query(
-    query,
-    [titulo, data_evento, bannerUrl, link_externo], // Salva a URL
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar mídia:", err);
-        return res.status(500).json({ erro: "Erro ao cadastrar mídia." });
-      }
-      res.status(201).json({
-        mensagem: "Mídia cadastrada com sucesso!",
-        id: result.rows[0].id,
-      });
-    }
-  );
+    const sql = `
+      INSERT INTO midias (titulo, data_evento, link_externo, banner) 
+      VALUES ($1, $2, $3, $4) RETURNING id
+    `;
+    
+    await pool.query(sql, [titulo, data_evento, link_externo, bannerBase64]);
+
+    res.status(201).json({ mensagem: "Mídia cadastrada com sucesso!" });
+
+  } catch (error) {
+    console.error("Erro ao criar mídia:", error);
+    res.status(500).json({ erro: "Erro ao salvar mídia." });
+  }
 });
 
 // listar mídias
