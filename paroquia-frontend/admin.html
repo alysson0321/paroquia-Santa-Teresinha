@@ -114,7 +114,7 @@
       id="secao-validacao"
       style="max-width: 800px; margin: 0 auto; padding: 20px"
     >
-      <h2 style="color: #003366; text-align: center">Dizimos pendentes</h2>
+      <h2 style="color: #003366; text-align: center; ">Dizimos pendentes</h2>
 
       <div id="lista-pendentes">
         <p style="text-align: center">Carregando pagamentos pendentes...</p>
@@ -138,7 +138,7 @@
 
           if (lista.length === 0) {
             container.innerHTML =
-              "<p style='text-align:center;'>Nenhum dízimo pendente. Tudo limpo! ✨</p>";
+              "<p style='text-align:center;'>Nenhum dízimo pendente.</p>";
             return;
           }
 
@@ -153,9 +153,11 @@
               <p style="margin: 5px 0;"><strong>Valor:</strong> R$ ${
                 dizimo.valor
               }</p>
-              <p style="margin: 5px 0;color: #d4a017;"><strong>Data:</strong> ${new Date(
-                dizimo.data_pagamento
-              ).toLocaleDateString("pt-BR")}</p>
+              <p style="margin: 5px 0;"><strong>Data:</strong><span style ="color: #d4a017;">
+                 ${new Date(
+                  dizimo.data_pagamento
+                ).toLocaleDateString("pt-BR")}
+              </span></p>
             </div>
             
             <div style="text-align: center;">

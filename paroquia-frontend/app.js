@@ -69,7 +69,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
 
               return `
           <div class="intencao-item" id="intencao-${i.id}">
-            <div class="info" style="flex: 1;" style="color: #aa7e0eff">
+            <div class="info" style="flex: 1;" style="color: #aa7e0eff;">
               <strong>${dataDisplay}</strong>: ${i.descricao}
             </div>
             
@@ -103,9 +103,15 @@ const API_URL = "https://paroquia-backend.onrender.com";
           listaDizimos.innerHTML = dizimos
             .map(
               (d) =>
-                `<p>${new Date(d.data_pagamento).toLocaleDateString(
-                  "pt-BR"
-                )} R$ ${d.valor}</p>`
+                `
+                  <p style="color: #000000;font-family: "Lato", sans-serif;"><strong>
+                    <span>
+                      ${new Date(d.data_pagamento).toLocaleDateString(
+                        "pt-BR"
+                      )}:
+                    </span>
+                  </strong> R$ ${d.valor}</p>
+                `
             )
             .join("");
         } else {
@@ -479,7 +485,7 @@ if (formDizimo) {
       return;
     }
 
-    feedback.innerHTML = "⏳ Enviando comprovante...";
+    feedback.innerHTML = "Enviando comprovante...";
     feedback.style.color = "black";
 
     const formData = new FormData();
