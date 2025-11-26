@@ -462,3 +462,57 @@ async function salvarEdicao() {
     alert("Erro de conexão.");
   }
 }
+
+// seção do dízimo
+const formDizimo = document.getElementById("form-dizimo");
+
+if (formDizimo) {
+  formDizimo.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const feedback = document.querySelector(".resu");
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    if (!usuario) {
+      alert("Você precisa estar logado!");
+      window.location.href = "login.html";
+      return;
+    }
+
+    feedback.innerHTML = "⏳ Enviando comprovante...";
+    feedback.style.color = "black";
+
+    const formData = new FormData();
+    formData.append("usuario_id", usuario.id);
+    formData.append("valor", document.getElementById("valor").value);
+    formData.append(
+      "data_pagamento",
+      document.getElementById("data_pagamento").value
+    );
+
+    const arquivo = document.getElementById("comprovante").files[0];
+    formData.append("comprovante", arquivo);
+
+    try {
+      const res = await fetch(`${API_URL}/pagamentos-dizimo`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        feedback.innerHTML = "Pagamento enviado com sucesso";
+        feedback.style.color = "green";
+        formDizimo.reset();
+      } else {
+        feedback.innerHTML = "Erro no pagamento";
+        feedback.style.color = "red";
+      }
+    } catch (error) {
+      console.error(error);
+      feedback.innerHTML = "❌ Erro de conexão.";
+      feedback.style.color = "red";
+    }
+  });
+}

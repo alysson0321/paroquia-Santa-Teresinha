@@ -14,7 +14,7 @@
     //verifica se o usuário é admin
     if (!usuarioLogado || usuarioLogado.tipo_usuario !== "admin") {
       alert("Acesso restrito! Você será redirecionado.");
-      window.location.href = "index.html"; 
+      window.location.href = "index.html";
     }
   </script>
 
@@ -108,9 +108,116 @@
       </div>
     </main>
 
+    <hr style="margin: 40px 0; border: 1px solid #d4a017" />
+
+    <section
+      id="secao-validacao"
+      style="max-width: 800px; margin: 0 auto; padding: 20px"
+    >
+      <h2 style="color: #003366; text-align: center">Dizimos pendentes</h2>
+
+      <div id="lista-pendentes">
+        <p style="text-align: center">Carregando pagamentos pendentes...</p>
+      </div>
+    </section>
+
     <footer class="footer">
       <p>Paróquia Santa Teresinha do Menino Jesus<br />Jucati-PE</p>
     </footer>
+
+    <script>
+      async function carregarDizimosPendentes() {
+        const container = document.getElementById("lista-pendentes");
+
+        try {
+          const API_URL = "https://paroquia-backend.onrender.com";
+          //const API_URL = 'http://localhost:3000';
+
+          const res = await fetch(`${API_URL}/admin/dizimos-pendentes`);
+          const lista = await res.json();
+
+          if (lista.length === 0) {
+            container.innerHTML =
+              "<p style='text-align:center;'>Nenhum dízimo pendente. Tudo limpo! ✨</p>";
+            return;
+          }
+
+          container.innerHTML = lista
+            .map(
+              (dizimo) => `
+        <div class="dizimo-card" style="background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+              <h3 style="margin: 0; color: #003366;">${dizimo.nome}</h3>
+              <p style="margin: 5px 0;"><strong>Valor:</strong> R$ ${
+                dizimo.valor
+              }</p>
+              <p style="margin: 5px 0;color: #d4a017;"><strong>Data:</strong> ${new Date(
+                dizimo.data_pagamento
+              ).toLocaleDateString("pt-BR")}</p>
+            </div>
+            
+            <div style="text-align: center;">
+              <p style="font-weight: bold; margin-bottom: 5px;">Comprovante:</p>
+              <img src="${
+                dizimo.comprovante
+              }" alt="Comprovante" style="max-width: 150px; max-height: 200px; border: 1px solid #ccc; cursor: pointer;" onclick="window.open(this.src)">
+            </div>
+          </div>
+
+          <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end;">
+            <button onclick="atualizarStatus(${
+              dizimo.id
+            }, 'rejeitado')" style="background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+              Rejeitar
+            </button>
+            <button onclick="atualizarStatus(${
+              dizimo.id
+            }, 'aprovado')" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+              Aprovar
+            </button>
+          </div>
+
+        </div>
+      `
+            )
+            .join("");
+        } catch (error) {
+          console.error(error);
+          container.innerHTML =
+            "<p style='color: red; text-align: center;'>Erro ao carregar dízimos.</p>";
+        }
+      }
+
+      async function atualizarStatus(id, novoStatus) {
+        if (!confirm(`Tem certeza que deseja marcar como ${novoStatus}?`))
+          return;
+
+        //const API_URL = 'http://localhost:3000';
+        const API_URL = "https://paroquia-backend.onrender.com";
+
+        try {
+          const res = await fetch(`${API_URL}/admin/dizimos/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: novoStatus }),
+          });
+
+          if (res.ok) {
+            alert("Status atualizado!");
+            carregarDizimosPendentes();
+          } else {
+            alert("Erro ao atualizar.");
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Erro de conexão.");
+        }
+      }
+
+      carregarDizimosPendentes();
+    </script>
 
     <style>
       .header .logo {
