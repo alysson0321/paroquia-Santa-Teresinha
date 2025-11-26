@@ -1,5 +1,5 @@
-//const API_URL = "http://localhost:3000";
-const API_URL = "https://paroquia-backend.onrender.com";
+const API_URL = "http://localhost:3000";
+//const API_URL = "https://paroquia-backend.onrender.com";
 
 (async () => {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -106,9 +106,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
                 `
                   <p style="color: #000000;font-family: "Lato", sans-serif;"><strong>
                     <span>
-                      ${new Date(d.data_pagamento).toLocaleDateString(
-                        "pt-BR"
-                      )}:
+                      ${new Date(d.data_pagamento).toLocaleDateString("pt-BR")}:
                     </span>
                   </strong> R$ ${d.valor}</p>
                 `
@@ -130,12 +128,12 @@ const API_URL = "https://paroquia-backend.onrender.com";
       const res = await fetch(`${API_URL}/eventos`);
       if (!res.ok) throw new Error("Erro ao buscar eventos");
       const eventos = await res.json();
+
       if (eventos.length > 0) {
         listaEventosEl.innerHTML = "";
         eventos.forEach((evento) => {
-          const bannerSrc = evento.banner.startsWith("http")
-            ? evento.banner
-            : `${API_URL}/${evento.banner}`;
+          const bannerSrc = evento.banner; 
+
           listaEventosEl.innerHTML += `
             <div class="evento">
               <img src="${bannerSrc}" alt="${evento.titulo}">
@@ -157,12 +155,11 @@ const API_URL = "https://paroquia-backend.onrender.com";
       const res = await fetch(`${API_URL}/midias`);
       if (!res.ok) throw new Error("Erro ao buscar mídias");
       const midias = await res.json();
+
       if (midias.length > 0) {
         listaMidiasEl.innerHTML = "";
         midias.forEach((midia) => {
-          const bannerSrc = midia.banner.startsWith("http")
-            ? midia.banner
-            : `${API_URL}/${midia.banner}`;
+          const bannerSrc = midia.banner; 
           listaMidiasEl.innerHTML += `
             <div class="midia">
               <img src="${bannerSrc}" alt="${midia.titulo}">
@@ -185,6 +182,7 @@ const API_URL = "https://paroquia-backend.onrender.com";
     }
   }
 })();
+
 
 // seção do registro do usuário
 const formRegistro = document.getElementById("form-registro");
@@ -217,6 +215,7 @@ if (formRegistro) {
     }
   });
 }
+
 
 // seção do login do usuário
 const formLogin = document.getElementById("form-login");
@@ -254,6 +253,7 @@ if (formLogin) {
     }
   });
 }
+
 
 // cadastrar intenção
 const formIntencao = document.getElementById("form-intencao");
@@ -296,14 +296,18 @@ if (formIntencao) {
   });
 }
 
-// página do admin - add eventos e mídias
+
+// seção do admin
 const formEventoAdmin = document.getElementById("form-evento-admin");
 const feedbackEl = document.getElementById("admin-feedback");
 
+
+//eventos
 if (formEventoAdmin) {
   formEventoAdmin.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (feedbackEl) feedbackEl.innerHTML = "";
+
     try {
       const formData = new FormData();
       formData.append("titulo", document.getElementById("evento-titulo").value);
@@ -316,39 +320,47 @@ if (formEventoAdmin) {
         document.getElementById("evento-data-texto").value
       );
       formData.append("local", document.getElementById("evento-local").value);
+
       const inputBanner = document.getElementById("evento-banner");
       if (inputBanner.files.length === 0) {
         throw new Error("Por favor, selecione uma imagem para o banner.");
       }
-      formData.append("banner_arquivo", inputBanner.files[0]);
+
+      formData.append("banner", inputBanner.files[0]);
 
       const res = await fetch(`${API_URL}/eventos`, {
         method: "POST",
         body: formData,
       });
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.erro || "Erro do servidor.");
       }
+
       const data = await res.json();
       if (feedbackEl) {
-        feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
+        feedbackEl.innerHTML = `<p style="color: green;">✅ ${data.mensagem}</p>`;
       }
       formEventoAdmin.reset();
     } catch (err) {
       console.error("Erro ao cadastrar evento:", err);
       if (feedbackEl) {
-        feedbackEl.innerHTML = `<p style="color: red;">${err.message}</p>`;
+        feedbackEl.innerHTML = `<p style="color: red;">❌ ${err.message}</p>`;
       }
     }
   });
 }
 
 const formMidiaAdmin = document.getElementById("form-midia-admin");
+
+
+//midias
 if (formMidiaAdmin) {
   formMidiaAdmin.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (feedbackEl) feedbackEl.innerHTML = "";
+
     try {
       const formData = new FormData();
       formData.append("titulo", document.getElementById("midia-titulo").value);
@@ -360,35 +372,40 @@ if (formMidiaAdmin) {
         "link_externo",
         document.getElementById("midia-link").value
       );
+
       const inputMidia = document.getElementById("midia-banner");
       if (inputMidia.files.length === 0) {
         throw new Error(
           "Por favor, selecione uma imagem para a capa da mídia."
         );
       }
-      formData.append("midia_arquivo", inputMidia.files[0]);
+
+      formData.append("banner", inputMidia.files[0]);
 
       const res = await fetch(`${API_URL}/midias`, {
         method: "POST",
         body: formData,
       });
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.erro || "Erro do servidor.");
       }
+
       const data = await res.json();
       if (feedbackEl) {
-        feedbackEl.innerHTML = `<p style="color: green;">${data.mensagem}</p>`;
+        feedbackEl.innerHTML = `<p style="color: green;">✅ ${data.mensagem}</p>`;
       }
       formMidiaAdmin.reset();
     } catch (err) {
       console.error("Erro ao cadastrar mídia:", err);
       if (feedbackEl) {
-        feedbackEl.innerHTML = `<p style="color: red;">${err.message}</p>`;
+        feedbackEl.innerHTML = `<p style="color: red;">❌ ${err.message}</p>`;
       }
     }
   });
 }
+
 
 // remover intenção
 async function removerIntencao(idDaIntencao) {
@@ -423,6 +440,8 @@ async function removerIntencao(idDaIntencao) {
     alert(error.message);
   }
 }
+
+
 // editar intenção
 let idEdicaoAtual = null;
 
@@ -468,6 +487,7 @@ async function salvarEdicao() {
     alert("Erro de conexão.");
   }
 }
+
 
 // seção do dízimo
 const formDizimo = document.getElementById("form-dizimo");

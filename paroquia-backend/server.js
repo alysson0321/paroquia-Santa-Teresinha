@@ -218,7 +218,7 @@ app.put("/intencoes/:id", async (req, res) => {
   }
 });
 
-// listar dízimos por usuário (falta implementar o pagamento)
+// listar dízimos por usuário
 app.get("/pagamentos_dizimo", (req, res) => {
   const usuario_id = req.query.usuario_id;
 
@@ -236,44 +236,45 @@ app.get("/pagamentos_dizimo", (req, res) => {
   });
 });
 
-// cadastrar eventos
-app.post(
-  "/eventos",
-  uploadBannerEvento.single("banner_arquivo"),
-  (req, res) => {
+// cadastrar eventos - admin.html
+app.post("/eventos", upload.single("banner"), async (req, res) => {
+  try {
     const { titulo, data_inicio, data_texto, local } = req.body;
+
+    if (!titulo || !data_inicio || !data_texto || !local) {
+      return res
+        .status(400)
+        .json({ erro: "Preencha todos os campos de texto." });
+    }
     if (!req.file) {
       return res
         .status(400)
         .json({ erro: "A imagem do banner é obrigatória." });
     }
-    const bannerUrl = `uploads/banners/${req.file.filename}`;
 
-    if (!titulo || !data_inicio || !data_texto || !local) {
-      return res.status(400).json({
-        erro: "Todos os campos (titulo, data_inicio, data_texto, local) são obrigatórios.",
-      });
-    }
+    const bannerBase64 = `data:${
+      req.file.mimetype
+    };base64,${req.file.buffer.toString("base64")}`;
 
-    const query =
-      "INSERT INTO eventos (titulo, data_inicio, data_texto, local, banner) VALUES ($1, $2, $3, $4, $5) RETURNING id";
+    const sql = `
+      INSERT INTO eventos (titulo, data_inicio, data_texto, local, banner) 
+      VALUES ($1, $2, $3, $4, $5) RETURNING id
+    `;
 
-    pool.query(
-      query,
-      [titulo, data_inicio, data_texto, local, bannerUrl],
-      (err, result) => {
-        if (err) {
-          console.error("Erro ao cadastrar evento:", err);
-          return res.status(500).json({ erro: "Erro ao cadastrar evento." });
-        }
-        res.status(201).json({
-          mensagem: "Evento cadastrado com sucesso!",
-          id: result.rows[0].id,
-        });
-      }
-    );
+    await pool.query(sql, [
+      titulo,
+      data_inicio,
+      data_texto,
+      local,
+      bannerBase64,
+    ]);
+
+    res.status(201).json({ mensagem: "Evento criado com sucesso!" });
+  } catch (error) {
+    console.error("ERRO NO BACKEND (EVENTOS):", error);
+    res.status(500).json({ erro: "Erro interno ao salvar evento." });
   }
-);
+});
 
 // listar eventos - index.html
 app.get("/eventos", (req, res) => {
@@ -288,39 +289,36 @@ app.get("/eventos", (req, res) => {
   });
 });
 
-// cadastrar mídia
-app.post("/midias", uploadBannerMidia.single("midia_arquivo"), (req, res) => {
-  const { titulo, data_evento, link_externo } = req.body;
-  if (!req.file) {
-    return res
-      .status(400)
-      .json({ erro: "A imagem (capa) da mídia é obrigatória." });
-  }
-  const bannerUrl = `uploads/midias/${req.file.filename}`;
+// cadastrar mídias
+app.post("/midias", upload.single("banner"), async (req, res) => {
+  try {
+    const { titulo, data_evento, link_externo } = req.body;
 
-  if (!titulo || !data_evento || !link_externo) {
-    return res.status(400).json({
-      erro: "Todos os campos (titulo, data_evento, banner, link_externo) são obrigatórios.",
-    });
-  }
-
-  const query =
-    "INSERT INTO midias (titulo, data_evento, banner, link_externo) VALUES ($1, $2, $3, $4) RETURNING id";
-
-  pool.query(
-    query,
-    [titulo, data_evento, bannerUrl, link_externo], // Salva a URL
-    (err, result) => {
-      if (err) {
-        console.error("Erro ao cadastrar mídia:", err);
-        return res.status(500).json({ erro: "Erro ao cadastrar mídia." });
-      }
-      res.status(201).json({
-        mensagem: "Mídia cadastrada com sucesso!",
-        id: result.rows[0].id,
-      });
+    if (!titulo || !data_evento || !link_externo) {
+      return res
+        .status(400)
+        .json({ erro: "Preencha todos os campos de texto." });
     }
-  );
+    if (!req.file) {
+      return res.status(400).json({ erro: "A capa da mídia é obrigatória." });
+    }
+
+    const bannerBase64 = `data:${
+      req.file.mimetype
+    };base64,${req.file.buffer.toString("base64")}`;
+
+    const sql = `
+      INSERT INTO midias (titulo, data_evento, link_externo, banner) 
+      VALUES ($1, $2, $3, $4) RETURNING id
+    `;
+
+    await pool.query(sql, [titulo, data_evento, link_externo, bannerBase64]);
+
+    res.status(201).json({ mensagem: "Mídia criada com sucesso!" });
+  } catch (error) {
+    console.error("ERRO NO BACKEND (MIDIAS):", error);
+    res.status(500).json({ erro: "Erro interno ao salvar mídia." });
+  }
 });
 
 // listar mídias
