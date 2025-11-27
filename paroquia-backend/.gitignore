@@ -3,7 +3,3 @@ node_modules
 
 # Ignorar arquivo de variáveis de ambiente 
 .env
-
-# Ignorar uploads de arquivos
-uploads
-/uploads
