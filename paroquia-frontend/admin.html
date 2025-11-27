@@ -42,7 +42,7 @@
           <input type="text" id="evento-titulo" name="titulo" required />
 
           <label for="evento-data-inicio"
-            >Data de Início (para ordenação):</label
+            >Data de Início (para ordenação no sistema):</label
           >
           <input
             type="date"
@@ -64,7 +64,7 @@
           <label for="evento-local">Local:</label>
           <input type="text" id="evento-local" name="local" required />
 
-          <label for="evento-banner">Banner do Evento (Imagem):</label>
+          <label for="evento-banner">Card do Evento:</label>
           <input
             type="file"
             id="evento-banner"
@@ -82,7 +82,7 @@
           <label for="midia-titulo">Título da Mídia:</label>
           <input type="text" id="midia-titulo" name="titulo" required />
 
-          <label for="midia-data">Data do Evento (da mídia):</label>
+          <label for="midia-data">Data da Midia:</label>
           <input type="date" id="midia-data" name="data_evento" required />
 
           <label for="midia-link">Link Externo (Google Drive, etc):</label>
@@ -110,11 +110,43 @@
 
     <hr style="margin: 40px 0; border: 1px solid #d4a017" />
 
+    <section style="max-width: 800px; margin: 0 auto; padding: 20px">
+      <h2 style="color: #003366; text-align: center">Intenções para Missa</h2>
+
+      <div style="text-align: center; margin-bottom: 20px">
+        <label for="filtro-data-intencao"
+          ><strong>Data da Missa:</strong></label
+        >
+        <input
+          type="date"
+          id="filtro-data-intencao"
+          onchange="buscarIntencoesAdmin()"
+          style="
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+          "
+        />
+      </div>
+
+      <div
+        id="lista-intencoes-admin"
+        style="display: flex; flex-direction: column; gap: 10px"
+      >
+        <p style="text-align: center; color: #666">
+          Carregando intenções de hoje...
+        </p>
+      </div>
+    </section>
+
+    <hr style="margin: 40px 0; border: 1px solid #d4a017" />
+
     <section
       id="secao-validacao"
       style="max-width: 800px; margin: 0 auto; padding: 20px"
     >
-      <h2 style="color: #003366; text-align: center; ">Dizimos pendentes</h2>
+      <h2 style="color: #003366; text-align: center">Dizimos pendentes</h2>
 
       <div id="lista-pendentes">
         <p style="text-align: center">Carregando pagamentos pendentes...</p>
@@ -154,9 +186,7 @@
                 dizimo.valor
               }</p>
               <p style="margin: 5px 0;"><strong>Data:</strong><span style ="color: #d4a017;">
-                 ${new Date(
-                  dizimo.data_pagamento
-                ).toLocaleDateString("pt-BR")}
+                 ${new Date(dizimo.data_pagamento).toLocaleDateString("pt-BR")}
               </span></p>
             </div>
             
@@ -219,6 +249,60 @@
       }
 
       carregarDizimosPendentes();
+
+      // Função para buscar e desenhar as intenções na tela
+      async function buscarIntencoesAdmin() {
+        const dataInput = document.getElementById("filtro-data-intencao").value;
+        const container = document.getElementById("lista-intencoes-admin");
+
+        //const API_URL = "http://localhost:3000";
+        const API_URL = "https://paroquia-backend.onrender.com";
+
+        if (!dataInput) return;
+
+        try {
+          const res = await fetch(
+            `${API_URL}/admin/intencoes?data=${dataInput}`
+          );
+          const lista = await res.json();
+
+          if (lista.length === 0) {
+            container.innerHTML = `
+          <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+            <p>Nenhuma intenção encontrada para esta data.</p>
+          </div>`;
+            return;
+          }
+
+          // Monta a lista visual
+          container.innerHTML = lista
+            .map(
+              (item) => `
+        <div style="background: white; border-left: 5px solid #d4a017; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <p style="margin: 0; font-size: 1.1rem; color: #333;"><strong>${item.descricao}</strong></p>
+            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #d4a017;">👤 Pedido por: ${item.nome}</p>
+          </div>
+        </div>
+      `
+            )
+            .join("");
+        } catch (error) {
+          console.error(error);
+          container.innerHTML =
+            "<p style='color: red; text-align: center;'>Erro ao buscar intenções.</p>";
+        }
+      }
+
+      window.addEventListener("load", () => {
+        const inputData = document.getElementById("filtro-data-intencao");
+
+        if (inputData) {
+          inputData.valueAsDate = new Date();
+
+          buscarIntencoesAdmin();
+        }
+      });
     </script>
 
     <style>

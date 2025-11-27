@@ -5,22 +5,9 @@ const multer = require("multer");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
-const path = require("path");
-const fs = require("fs");
 
 app.use(cors());
 app.use(express.json());
-
-// criar pastas de upload se não existirem
-const uploadsDir = path.join(__dirname, "uploads");
-const bannersDir = path.join(uploadsDir, "banners");
-const midiasDir = path.join(uploadsDir, "midias");
-const comprovantesDir = path.join(uploadsDir, "comprovantes");
-
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
-if (!fs.existsSync(bannersDir)) fs.mkdirSync(bannersDir);
-if (!fs.existsSync(midiasDir)) fs.mkdirSync(midiasDir);
-if (!fs.existsSync(comprovantesDir)) fs.mkdirSync(comprovantesDir);
 
 // config do bd
 const connectionString = process.env.DATABASE_URL;
@@ -41,33 +28,9 @@ if (
 
 const pool = new Pool(connectionConfig);
 
+//config multer (upload de arquivos)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-// config multer eventos e midias ---
-const bannerStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, bannersDir),
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const extensao = path.extname(file.originalname);
-    cb(null, "banner-" + uniqueSuffix + extensao);
-  },
-});
-
-const midiaStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, midiasDir),
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const extensao = path.extname(file.originalname);
-    cb(null, "midia-" + uniqueSuffix + extensao);
-  },
-});
-
-// instâncias do multer
-const uploadBannerEvento = multer({ storage: bannerStorage });
-const uploadBannerMidia = multer({ storage: midiaStorage });
-
-app.use("/uploads", express.static(uploadsDir));
 
 //rotas ->
 app.get("/", (req, res) => {
@@ -373,6 +336,8 @@ app.post(
   }
 );
 
+
+// rotas para o admin ->
 // listar dizimos pendentes (admin)
 app.get("/admin/dizimos-pendentes", async (req, res) => {
   try {
@@ -402,5 +367,28 @@ app.put("/admin/dizimos/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: "Erro ao atualizar status." });
+  }
+});
+
+// listar intenções por data (admin)
+app.get("/admin/intencoes", async (req, res) => {
+  const { data } = req.query; 
+
+  if (!data) {
+    return res.status(400).json({ erro: "Data é obrigatória." });
+  }
+
+  try {
+    const sql = `
+      SELECT i.id, i.descricao, i.data_missa, u.nome 
+      FROM intencoes_missa i 
+      JOIN usuarios u ON i.usuario_id = u.id 
+      WHERE i.data_missa = $1
+    `;
+    const result = await pool.query(sql, [data]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar intenções." });
   }
 });
