@@ -2,7 +2,7 @@
 
 ![Status do Projeto](https://img.shields.io/badge/Status-Concluído-brightgreen)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-blue)
 
 ## 📖 Sobre o Projeto
 
@@ -33,14 +33,14 @@ O projeto foi desenvolvido utilizando a arquitetura MVC:
 
 * **Front-end:** HTML5, CSS3 (Responsivo) e JavaScript.
 * **Back-end:** Node.js com Express.
-* **Banco de Dados:** PostGre.
+* **Banco de Dados:** PostGreSQL.
 * **Ferramentas:** Git, VS Code e Figma (Prototipagem).
 
 ## ⚙️ Como Rodar o Projeto Localmente
 
 ### Pré-requisitos
 * Node.js instalado.
-* PostGre instalado e rodando.
+* PostGreSQL instalado e rodando.
 * Git instalado.
 
 ### Passo a passo
