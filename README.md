@@ -6,7 +6,7 @@
 
 ## 📖 Sobre o Projeto
 
-Este projeto é um sistema web desenvolvido como Trabalho de Conclusão de Curso (TCC) para o curso Técnico em Informática do IFPE - Campus Garanhuns.
+Este projeto é um sistema web desenvolvido como Projeto Profissional Orientado (PPO) para o curso Técnico em Informática do IFPE - Campus Garanhuns.
 
 O objetivo principal é modernizar a comunicação e os serviços da **Paróquia Santa Teresinha do Menino Jesus** (Jucati-PE), centralizando informações e facilitando processos que antes eram manuais. O sistema permite que fiéis cadastrem intenções de missa e realizem dízimos online, além de oferecer um painel administrativo para a gestão paroquial.
 
