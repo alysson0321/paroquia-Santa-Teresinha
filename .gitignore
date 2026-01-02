@@ -3,3 +3,7 @@ node_modules
 
 # Ignorar arquivo de variáveis de ambiente 
 .env
+
+/paroquia-backend/.env
+
+.npmrc
