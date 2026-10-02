@@ -5,18 +5,14 @@ services:
     rootDir: paroquia-backend
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: paroquia-santa-teresinha-db
-          property: connectionString
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_ORIGIN
         sync: false
       - key: PIX_KEY
         sync: false
-
-databases:
-  - name: paroquia-santa-teresinha-db
-    plan: free
