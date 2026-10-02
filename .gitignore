@@ -1,9 +1,7 @@
-# Ignorar dependências do Node
-node_modules
-
-# Ignorar arquivo de variáveis de ambiente 
+node_modules/
 .env
-
-/paroquia-backend/.env
-
-.npmrc
+.env.*
+!.env.example
+*.log
+work/
+neon-backup-*.json

@@ -1,92 +1,61 @@
-# Site da Paróquia Santa Teresinha do Menino Jesus ⛪
+# Paróquia Santa Teresinha
 
-![Status do Projeto](https://img.shields.io/badge/Status-Concluído-brightgreen)
-![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
-![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-blue)
+Reconstrução do sistema da paróquia mantendo a divisão `paroquia-backend` / `paroquia-frontend`, o conteúdo principal e o fluxo de intenções, dízimos, eventos e mídias.
 
-## 📖 Sobre o Projeto
+## O que mudou
 
-Este projeto é um sistema web desenvolvido como Projeto Profissional Orientado (PPO) para o curso Técnico em Informática do IFPE - Campus Garanhuns.
+- API Express modularizada em rotas, controllers, serviços, validações e middlewares.
+- Senhas protegidas com bcrypt e login com JWT.
+- Permissões administrativas aplicadas no backend.
+- CRUD administrativo de eventos e mídias.
+- Uploads com limite de tamanho e tipos permitidos.
+- Validação de entradas com Zod, rate limit no login/cadastro e Helmet.
+- Usuários só acessam as próprias intenções e dízimos.
+- Banco com índices, timestamps e novas colunas de auditoria.
+- Frontend preservando a proposta visual original, agora com chamadas de API centralizadas e painel administrativo em abas.
 
-O objetivo principal é modernizar a comunicação e os serviços da **Paróquia Santa Teresinha do Menino Jesus** (Jucati-PE), centralizando informações e facilitando processos que antes eram manuais. O sistema permite que fiéis cadastrem intenções de missa e realizem dízimos online, além de oferecer um painel administrativo para a gestão paroquial.
+## Como o sistema funciona
 
-**Link do Projeto no Ar:** [https://paroquiasantateresinha.onrender.com](https://paroquiasantateresinha.onrender.com)
+### Visitante
 
-## 🚀 Funcionalidades
+O visitante acessa a página inicial, conhece a padroeira, consulta os párocos, horários das missas, eventos, mídias e canais de contato. Eventos e mídias publicados pela administração aparecem automaticamente nas respectivas seções.
 
-O sistema possui dois níveis de acesso: **Paroquiano** e **Administrador**.
+### Paroquiano
 
-### 👤 Paroquiano (Fiel)
-- **Cadastro e Login:** Acesso seguro ao sistema.
-- **Intenções de Missa:** Cadastrar, editar, visualizar e remover intenções para datas específicas.
-- **Dízimo Online:** Realizar contribuições e visualizar histórico.
-- **Informações:** Visualizar horários de missas, eventos e avisos.
+O paroquiano cria uma conta e entra com e-mail e senha. Depois do login, pode registrar uma intenção de missa, acompanhar suas próprias intenções, enviar um comprovante de dízimo e consultar o histórico dos seus envios. Cada conta só recebe os próprios registros.
 
-### 🛡️ Administrador (Secretaria/Pároco)
-- **Gestão de Conteúdo:** Cadastrar e atualizar banners e avisos.
-- **Controle de Intenções:** Visualizar e organizar as intenções por data.
-- **Validação:** Conferir e gerenciar registros de dízimos e usuários.
+### Administrador
 
-## 🛠️ Tecnologias Utilizadas
+O administrador entra no painel e encontra quatro áreas: gerenciamento de eventos, gerenciamento de mídias, conferência de dízimos e consulta de intenções. O próprio painel contém orientações sobre cada campo, formato dos arquivos e significado dos status.
 
-O projeto foi desenvolvido utilizando a arquitetura MVC:
+### Eventos e mídias
 
-* **Front-end:** HTML5, CSS3 (Responsivo) e JavaScript.
-* **Back-end:** Node.js com Express.
-* **Banco de Dados:** PostGreSQL.
-* **Ferramentas:** Git, VS Code e Figma (Prototipagem).
+Para um evento, informe título, data, texto da data, local e banner. Para uma mídia, informe título, data, link externo e capa. Depois de publicados, os registros são exibidos no site público. A API também possui endpoints de atualização e exclusão para a próxima etapa da interface administrativa.
 
-## ⚙️ Como Rodar o Projeto Localmente
+## Execução
 
-### Pré-requisitos
-* Node.js instalado.
-* PostGreSQL instalado e rodando.
-* Git instalado.
+1. Instale Node.js e PostgreSQL.
+2. Entre em `paroquia-backend`, copie `.env.example` para `.env` e configure `DATABASE_URL` e `JWT_SECRET`.
+3. Execute `database.sql` no banco.
+4. Execute `npm install` dentro de `paroquia-backend`.
+5. Execute `npm start` dentro de `paroquia-backend`.
+6. Sirva `paroquia-frontend` por um servidor estático, como Live Server.
 
-### Passo a passo
+O frontend usa `http://localhost:3000/api` por padrão. Para alterar, defina `window.PAROQUIA_API_URL` antes dos scripts.
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone [https://github.com/alysson0321/paroquia-Santa-Teresinha.git](https://github.com/alysson0321/paroquia-Santa-Teresinha.git)
-    ```
+## Conta de demonstração
 
-2.  **Acesse a pasta:**
-    ```bash
-    cd paroquia-Santa-Teresinha
-    ```
+Quando `DATABASE_URL` não está configurada, o backend usa um banco de demonstração em memória e cria automaticamente:
 
-3.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
+- E-mail: `admin@paroquia.local`
+- Senha: `Admin@12345`
 
-4.  **Configure o Banco de Dados:**
-    * Crie um arquivo `.env` na raiz do projeto.
-    * Configure as variáveis de conexão (exemplo):
-    ```env
-    DB_HOST=localhost
-    DB_USER=seu_usuario
-    DB_PASS=sua_senha
-    DB_NAME=nome_do_banco
-    ```
-    * Execute o script SQL disponível em `database.sql` para criar as tabelas.
+Essa conta serve apenas para teste local. Em produção, configure PostgreSQL, altere a senha e defina `JWT_SECRET` no `.env`.
 
-5.  **Execute o servidor:**
-    ```bash
-    npm start
-    ```
+Para uma instalação PostgreSQL já funcionando, use `node scripts/create-admin.js seu@email.com SuaSenhaForte` dentro de `paroquia-backend` para criar ou atualizar o administrador.
 
-6.  **Acesse:** Abra o navegador em `http://localhost:3000`.
+O arquivo `render.yaml` contém a configuração inicial para publicar a API e um PostgreSQL no Render. A publicação ainda exige uma conta do Render e a configuração da URL pública do frontend em `FRONTEND_ORIGIN`.
 
-## 📄 Licença
+## Observação sobre imagens
 
-Este projeto foi desenvolvido para fins acadêmicos.
-
-## 👨‍💻 Autor
-
-**Alysson Felipe Matias da Silva**
-* **LinkedIn:** [Alysson Felipe](https://www.linkedin.com/in/alysson-felipe-b456a92a7/)
-* **GitHub:** [@alysson0321](https://github.com/alysson0321)
-
----
-*Projeto desenvolvido sob orientação da Profa. Me. Alessandra Maranhão Soares Sivini Siqueira - IFPE 2025.*
+As imagens originais devem permanecer na pasta `paroquia-frontend/img`. A interface possui um fallback visual caso algum arquivo ainda não esteja presente.

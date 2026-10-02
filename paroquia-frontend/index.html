@@ -1,135 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paróquia Santa Teresinha do Menino Jesus</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-  
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Paróquia Santa Teresinha do Menino Jesus</title><link rel="stylesheet" href="css/style.css"></head>
 <body>
-
-  <!-- header -->
-  <header>
-    <img src="img/1.png" alt="Logo da Paróquia" class="logo">
-    <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">
-      ☰ 
-    </button>
-    
-  </header>
-
-  <!-- menu lateral -->
-  <nav id="sidebar" class="sidebar" aria-hidden="true">
-    <button class="close-btn" id="menu-close" aria-label="Fechar menu">×</button>
-    <ul>
-      <li><a href="admin.html" id="link-admin" style="display: none;">Administração</a></li>
-      <li><a href="conta.html">Conta</a></li>
-      <li><a href="intencoes.html">Intenções</a></li>
-      <li><a href="dizimo.html">Dízimos</a></li>
-      <li><a href="#parocos">Párocos</a></li>
-      <li><a href="#missas">Horários das Missas</a></li>
-      <li><a href="#eventos">Eventos</a></li>
-      <li><a href="#midias">Mídias</a></li>
-    </ul>
-  </nav>
-
-  <!-- overlay que fecha ao clicar fora -->
+  <header><a href="index.html" class="brand"><img class="logo" src="img/1.png" alt="Paróquia Santa Teresinha do Menino Jesus" onerror="this.style.display='none';this.parentElement.classList.add('logo-fallback')"></a><button id="menu-toggle" aria-label="Abrir menu">☰</button></header>
+  <nav id="sidebar" class="sidebar"><button id="menu-close" class="close-btn" aria-label="Fechar menu">×</button><ul><li><a id="link-admin" href="admin.html" style="display:none">Administração</a></li><li><a href="login.html">Entrar</a></li><li><a href="#parocos">Párocos</a></li><li><a href="#missas">Horários das Missas</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#midias">Mídias</a></li><li><a href="intencoes.html">Intenções de missa</a></li><li><a href="dizimo.html">Dízimo</a></li></ul></nav>
   <div id="menu-overlay" class="menu-overlay"></div>
-    
-  </header>
-
-
-
-  <!-- seção de Santa Teresinha -->
-  <section class="hero">
-    <h1 style="margin-bottom: 0px;">Paróquia</h1>
-    <h1 style="margin-top: 0px;">Santa Teresinha do Menino Jesus</h1>
-    <img src="img/padroeira.jpeg" alt="Santa Teresinha do Menino Jesus">
-    <h2>Nossa Padroeira</h2>
-    <p>
-      Santa Teresinha do Menino Jesus, também conhecida como Santa Teresa de Lisieux, nasceu em 1873, na França. Desde pequena, demonstrou um profundo amor por Deus e um desejo ardente de servir. Aos 15 anos, ingressou no Carmelo de Lisieux, onde viveu uma vida simples, marcada pela humildade, oração e confiança total na misericórdia divina.
-Sua espiritualidade, conhecida como a "pequena via", ensina que a santidade está ao alcance de todos por meio de pequenos gestos feitos com grande amor. Mesmo sem sair do convento, Santa Teresinha foi proclamada Padroeira das Missões, reconhecida por seu imenso zelo missionário e amor pela humanidade.
-Faleceu aos 24 anos, deixando como legado sua autobiografia, História de uma Alma, que continua a transformar vidas ao redor do mundo. Em 1997, foi proclamada Doutora da Igreja por São João Paulo II.
-    </p>
-  </section>
-
-  <!-- seção dos párocos -->
-  <section id = "parocos" class="section">
-    <h2>Nossos Párocos</h2>
-    <div  class="parocos">
-      <div class="paroco">
-        <img src="img/Padre-Everaldo.jpg" alt="Padre Everaldo">
-        <p>Padre Everaldo<br>2010 - 2015</p>
-      </div>
-      <div class="paroco">
-        <img src="img/Padre-Adriano.jpg" alt="Padre Adriano">
-        <p>Padre Adriano<br>2016 - 2020</p>
-      </div>
-      <div class="paroco">
-        <img src="img/Padre-Edjalma.jpg" alt="Padre Edjalma">
-        <p>Padre Edjalma<br>2021 - Atual</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- seção dos horários -->
-  <section id = "missas" class="section">
-    <h2>Horário das Missas</h2>
-    <div  class="missas">
-      <div class="missa">
-        <img src="img/matriz antiga.jpg" alt="Igreja Matriz">
-        <p><strong>Igreja Matriz</strong><br>
-          Quinta-feira: 19h00<br>
-          Sábado: 19h30<br>
-          Domingo: 08h00 <br>
-          <strong>Confissões</strong> <br>
-          Terça: 10h00 <br>
-          Sexta: 09h00
-        </p>
-      </div>
-      <div class="missa">
-        <img src="img/neves.jpg" alt="Vila Neves">
-        <p><strong>Vila Neves</strong><br>
-          Sexta-feira: 19h00<br>
-          Domingo: 19h00
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- seção dos eventos -->
-  <section id = "eventos" class="section">
-  <h2>Eventos</h2>
-    <div id="lista-eventos" class="eventos">
-      <p style="text-align: center;">Carregando eventos...</p>
-  </div>
- </section>
-
-  <!-- seção das mídias -->
-  <section id = "midias" class="section">
-  <h2>Mídias dos Eventos</h2>
-    <div id="lista-midias" class="midias">
-   <p style="text-align: center;">Carregando mídias...</p>
-  </div>
- </section>
-
- <!-- seção dos contatos-->
-  <section id=" contatos" class="section" style="text-align: center;">
-    <h2>Entre em contato conosco</h2> <br>
-
-    <a href="https://api.whatsapp.com/send/?phone=5587981263429&text&type=phone_number&app_absent=0" target="_blank"><img src="img/whatsapp.png" alt="" width="50px" style="padding-right: 15px;"></a>
-
-    <a href="https://www.instagram.com/paroquiasantateresinhajucati/" target="_blank"><img src="img/instagram.png" alt="" width="50px" style="padding-right: 15px;"></a>
-
-    <a href="https://www.facebook.com/paroquiasantateresinhajucati" target="_blank"><img src="img/facebook.png" alt="" width="50px" style="padding-right: 15px;"></a>
-  </section>
-
-  <!-- footer -->
-  <footer>
-    Paróquia Santa Teresinha do Menino Jesus </br> Jucati-PE
-  </footer>
-  
-  <script src="app.js"></script>
-</body>
-</html>
+  <main>
+    <section class="hero"><h1>Paróquia<br>Santa Teresinha do Menino Jesus</h1><img src="img/padroeira.jpeg" alt="Santa Teresinha do Menino Jesus"><h2>Nossa Padroeira</h2><p>Santa Teresinha do Menino Jesus, também conhecida como Santa Teresa de Lisieux, nasceu em 1873, na França. Desde pequena, demonstrou um profundo amor por Deus e um desejo ardente de servir. Aos 15 anos, ingressou no Carmelo de Lisieux, onde viveu uma vida simples, marcada pela humildade, oração e confiança total na misericórdia divina. Sua espiritualidade, conhecida como a “pequena via”, ensina que a santidade está ao alcance de todos por meio de pequenos gestos feitos com grande amor. Mesmo sem sair do convento, Santa Teresinha foi proclamada Padroeira das Missões, reconhecida por seu imenso zelo missionário e amor pela humanidade. Faleceu aos 24 anos, deixando como legado sua autobiografia, História de uma Alma, que continua a transformar vidas ao redor do mundo. Em 1997, foi proclamada Doutora da Igreja por São João Paulo II.</p></section>
+    <section id="parocos" class="section"><h2>Nossos Párocos</h2><div class="parocos"><div class="paroco"><img src="img/Padre-Everaldo.jpg" alt="Padre Everaldo"><p>Padre Everaldo<br>2010 - 2015</p></div><div class="paroco"><img src="img/Padre-Adriano.jpg" alt="Padre Adriano"><p>Padre Adriano<br>2016 - 2020</p></div><div class="paroco"><img src="img/Padre-Edjalma.jpg" alt="Padre Edjalma"><p>Padre Edjalma<br>2021 - Atual</p></div></div></section>
+    <section id="missas" class="section"><h2>Horário das Missas</h2><div class="missas"><div class="missa"><img src="img/matriz antiga.jpg" alt="Igreja Matriz"><p><strong>Igreja Matriz</strong><br>Quinta-feira: 19h00<br>Sábado: 19h30<br>Domingo: 08h00<br><strong>Confissões</strong><br>Terça: 10h00<br>Sexta: 09h00</p></div><div class="missa"><img src="img/neves.jpg" alt="Vila Neves"><p><strong>Vila Neves</strong><br>Sexta-feira: 19h00<br>Domingo: 19h00</p></div></div></section>
+    <section id="eventos" class="section"><h2>Eventos</h2><div id="lista-eventos" class="grid"><p class="empty">Carregando eventos...</p></div></section>
+    <section id="midias" class="section"><h2>Mídias dos Eventos</h2><div id="lista-midias" class="grid"><p class="empty">Carregando mídias...</p></div></section>
+    <section class="section contact"><h2>Entre em contato conosco</h2><div class="social"><a href="https://api.whatsapp.com/send/?phone=5587981263429" target="_blank" rel="noopener" aria-label="WhatsApp">◉</a><a href="https://www.instagram.com/paroquiasantateresinhajucati/" target="_blank" rel="noopener" aria-label="Instagram">◎</a><a href="https://www.facebook.com/paroquiasantateresinhajucati" target="_blank" rel="noopener" aria-label="Facebook">f</a></div></section>
+  </main>
+  <footer>Paróquia Santa Teresinha do Menino Jesus<br>Jucati-PE</footer>
+  <script src="js/api.js"></script><script src="js/app.js"></script>
+</body></html>
