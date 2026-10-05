@@ -54,13 +54,13 @@ footer{padding:24px 16px;line-height:1.8}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
 /* Tema escuro opcional */
-:root[data-theme="dark"]{color-scheme:dark;--blue:#4b9ac8;--blue-dark:#3279a7;--blue-soft:#302927;--gold:#e2bc5d;--gold-light:#f0cb6a;--gray:#1a1312;--ink:#f4ece7;--muted:#c0b0a8;--shadow:0 10px 28px #0006;--soft-shadow:0 8px 24px #0005;--card-border:#493936}
+:root[data-theme="dark"]{color-scheme:dark;--blue:#140c0a;--blue-dark:#0e0807;--blue-soft:#302320;--gold:#e2bc5d;--gold-light:#f0cb6a;--gray:#1a1312;--ink:#f4ece7;--muted:#c0b0a8;--shadow:0 10px 28px #0006;--soft-shadow:0 8px 24px #0005;--card-border:#493936}
 :root[data-theme="dark"] body{color:var(--ink);background:#1a1312}
 :root[data-theme="dark"] .hero,:root[data-theme="dark"] .section,:root[data-theme="dark"] .sidebar,:root[data-theme="dark"] form,:root[data-theme="dark"] .help-box,:root[data-theme="dark"] table,:root[data-theme="dark"] .account-profile,:root[data-theme="dark"] .account-record,:root[data-theme="dark"] .account-dialog{color:var(--ink);background-color:#251c1a;border-color:#493936}
 :root[data-theme="dark"] .card,:root[data-theme="dark"] #lista-eventos .event-card{color:var(--ink);background:#251c1a;border-color:#493936}
 :root[data-theme="dark"] #lista-eventos .event-card img,:root[data-theme="dark"] .card img{background:#302725}
 :root[data-theme="dark"] .hero p{color:#e6dcd6}
-:root[data-theme="dark"] .card h3,:root[data-theme="dark"] .account-section-heading h2,:root[data-theme="dark"] .account-dialog h2{color:var(--ink)}
+:root[data-theme="dark"] .card h3,:root[data-theme="dark"] .account-section-heading h2,:root[data-theme="dark"] .account-dialog h2,:root[data-theme="dark"] .account-identity h1,:root[data-theme="dark"] .admin h1,:root[data-theme="dark"] .admin h2{color:var(--gold)}
 :root[data-theme="dark"] .card p,:root[data-theme="dark"] .record-copy p,:root[data-theme="dark"] .account-identity>p:last-child{color:var(--muted)}
 :root[data-theme="dark"] .empty{color:#d7cbc5;background:#302725}
 :root[data-theme="dark"] .sidebar a{color:#e8ded8}
@@ -71,12 +71,13 @@ footer{padding:24px 16px;line-height:1.8}
 :root[data-theme="dark"] th{color:#f0d581;background:#302725}
 :root[data-theme="dark"] td{border-color:#493936}
 :root[data-theme="dark"] .social a{background:#f5eee9}
-:root[data-theme="dark"] .account-back,:root[data-theme="dark"] .card .button{color:#77b9e0}
+:root[data-theme="dark"] .account-back,:root[data-theme="dark"] .card .button,:root[data-theme="dark"] .event-date{color:#e2bc5d!important}
 :root[data-theme="dark"] .status-pendente{color:#ffe08a;background:#514326}
 :root[data-theme="dark"] .status-aprovado{color:#a3e0b8;background:#203d2b}
 :root[data-theme="dark"] .status-rejeitado{color:#ffb0b0;background:#4b2828}
 .theme-toggle{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;padding:0;border:1px solid #ffffff65;border-radius:50%;color:#fff;background:#ffffff16;font:700 20px/1 Arial,sans-serif;transition:background .2s,transform .2s}
 .theme-toggle:hover{color:#fff;background:#ffffff32;transform:rotate(-8deg)}
-.theme-toggle.is-floating{position:fixed;right:16px;bottom:16px;z-index:60;width:48px;height:48px;flex-basis:48px;color:var(--blue-dark);background:var(--white);border:1px solid #d7e0e6;box-shadow:var(--shadow)}
+.theme-toggle.is-floating{position:fixed;top:16px;left:16px;z-index:60;width:48px;height:48px;flex-basis:48px;color:var(--blue-dark);background:var(--white);border:1px solid #d7e0e6;box-shadow:var(--shadow)}
+.theme-toggle.is-floating.below-header{top:96px}
 :root[data-theme="dark"] .theme-toggle.is-floating{color:#f2d27c;background:#302522;border-color:#59443d}
-@media(max-width:700px){.theme-toggle{width:38px;height:38px;flex-basis:38px}.theme-toggle.is-floating{width:46px;height:46px;flex-basis:46px}}
+@media(max-width:700px){.theme-toggle.is-floating{width:46px;height:46px;flex-basis:46px}.theme-toggle.is-floating.below-header{top:84px}}

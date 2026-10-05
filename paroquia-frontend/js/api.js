@@ -54,12 +54,9 @@ document.addEventListener('error', (event) => { if (event.target.tagName === 'IM
   document.addEventListener('DOMContentLoaded', () => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'theme-toggle';
     const header = document.querySelector('body > header');
-    const menu = header?.querySelector('#menu-toggle');
-    if (menu) header.insertBefore(button, menu);
-    else if (header) header.append(button);
-    else button.classList.add('is-floating');
+    button.className = header ? 'theme-toggle is-floating below-header' : 'theme-toggle is-floating';
+    document.body.append(button);
     update(button);
     button.addEventListener('click', () => {
       root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
