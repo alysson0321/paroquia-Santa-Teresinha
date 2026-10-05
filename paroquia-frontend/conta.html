@@ -1,304 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minha Conta</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
-  </head>
-  <body>
-    <header>
-      <a href="index.html"><button class="back-btn">&#8592;</button></a>
-      <a href="index.html"
-        ><img src="img/1.png" alt="Paróquia Santa Teresinha"
-      /></a>
-      <button class="out-btn" onclick="logout()">Sair</button>
-    </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0d5688">
+  <title>Minha conta · Paróquia Santa Teresinha</title>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="index.html"><img class="logo" src="img/1.png" alt="Paróquia Santa Teresinha"></a>
+    <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+  </header>
+  <nav id="sidebar" class="sidebar" aria-label="Menu principal">
+    <button id="menu-close" class="close-btn" aria-label="Fechar menu">×</button>
+    <ul>
+      <li><a href="index.html">Página inicial</a></li>
+      <li><a href="admin.html" id="link-admin" style="display:none">Administração</a></li>
+      <li><a href="intencoes.html">Registrar intenção de missa</a></li>
+      <li><a href="dizimo.html">Enviar dízimo</a></li>
+      <li><a href="#" id="logout">Sair da conta</a></li>
+    </ul>
+  </nav>
+  <div id="menu-overlay" class="menu-overlay"></div>
 
-    <div class="perfil-container">
-      <div class="perfil-header">
-        <img src="img/perfil-icon.png" alt="Perfil" />
-        <div>
-          <h2 id="usuario-nome">Usuário</h2>
-          <p
-            id="usuario-email"
-            style="overflow-wrap: break-word; text-wrap: wrap"
-          >
-            email@email.com
-          </p>
-        </div>
-      </div>
+  <main class="account-page">
+    <a class="account-back" href="index.html">← Voltar ao site</a>
+    <section class="account-profile">
+      <img src="img/perfil-icon.png" alt="" class="account-avatar">
+      <div class="account-identity"><p class="account-eyebrow">Área do paroquiano</p><h1 id="usuario-nome">Carregando perfil…</h1><p id="usuario-email"></p></div>
+      <button id="account-logout" class="secondary account-logout">Sair</button>
+    </section>
 
-      <div class="sessao">
-        <h3>Minhas intenções:</h3>
-        <div id="lista-intencoes">
-          <p>Carregando intenções...</p>
-        </div>
-      </div>
+    <section class="section account-section" aria-labelledby="intentions-title">
+      <div class="account-section-heading"><div><p class="account-eyebrow">Suas solicitações</p><h2 id="intentions-title">Minhas intenções de missa</h2></div><a class="button" href="intencoes.html">Registrar intenção</a></div>
+      <div id="lista-intencoes" class="account-records"><p class="empty">Carregando suas intenções…</p></div>
+    </section>
 
-      <div class="sessao">
-        <h3>Meus Dízimos:</h3>
-        <div id="lista-dizimos">
-          <p>Carregando dízimos...</p>
-        </div>
-      </div>
-    </div>
+    <section class="section account-section" aria-labelledby="donations-title">
+      <div class="account-section-heading"><div><p class="account-eyebrow">Contribuições</p><h2 id="donations-title">Meus dízimos</h2></div><a class="button" href="dizimo.html">Enviar comprovante</a></div>
+      <div id="lista-dizimos" class="account-records"><p class="empty">Carregando seu histórico…</p></div>
+      <p class="account-note">Seus registros ficam associados à sua conta e são armazenados no banco de dados da paróquia.</p>
+    </section>
+  </main>
+  <footer>Paróquia Santa Teresinha do Menino Jesus<br>Jucati-PE</footer>
 
-    <div id="modal-edicao" class="modal-overlay">
-      <div class="modal-box">
-        <h3>Editar Intenção</h3>
+  <dialog id="modal-edicao" class="account-dialog">
+    <form id="edit-intention-form" method="dialog">
+      <h2>Editar intenção</h2>
+      <label>Descrição<textarea id="edit-descricao" name="descricao" required maxlength="1000"></textarea></label>
+      <label>Data da missa<input id="edit-data" name="data_missa" type="date" required></label>
+      <p id="edit-feedback" class="feedback" aria-live="polite"></p>
+      <div class="dialog-actions"><button type="button" class="secondary" id="cancel-edit">Cancelar</button><button type="submit">Salvar alterações</button></div>
+    </form>
+  </dialog>
 
-        <div class="campo">
-          <label>Descrição:</label>
-          <input
-            type="text"
-            id="edit-descricao"
-          />
-        </div>
-
-        <div class="campo">
-          <label>Data da Missa:</label>
-          <input type="date" id="edit-data" />
-        </div>
-
-        <div class="modal-botoes">
-          <button onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
-          <button onclick="salvarEdicao()" class="btn-salvar">
-            Salvar Alterações
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <footer>
-      Paróquia Santa Teresinha do Menino Jesus <br />
-      Jucati-PE
-    </footer>
-
-    <style>
-      body {
-        background-color: #f7f8fa;
-        margin: 0;
-        padding: 0;
-      }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 0;
-        position: relative;
-      }
-
-      header img {
-        height: 60px;
-      }
-
-      .modal-overlay {
-        display: none; /* Começa escondido */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .modal-box {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        width: 90%;
-        max-width: 400px; /* Não deixa ficar gigante no PC */
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        border-top: 5px solid #d4a017; /* Toque dourado da paróquia */
-      }
-
-      .modal-box h3 {
-        margin-top: 0;
-        color: #003366;
-        text-align: center;
-        margin-bottom: 20px;
-      }
-
-      .modal-box .campo {
-        margin-bottom: 15px;
-      }
-
-      .modal-box input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 1rem;
-      }
-
-      .modal-botoes {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-      }
-
-      .btn-salvar {
-        background-color: #003366;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-      }
-
-      .btn-cancelar {
-        background-color: #ccc;
-        color: #333;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .btn-salvar:hover {
-        background-color: #002244;
-      }
-      .btn-cancelar:hover {
-        background-color: #bbb;
-      }
-      .usuario-email {
-        word-break: break-all;
-        overflow-wrap: break-word;
-      }
-      .out-btn {
-        position: absolute;
-        right: 16px;
-        background: #d9d9d9;
-        color: #003366;
-        border: 2px solid #d4a017;
-        border-radius: 15px;
-        border-color: #d4a017;
-        font-size: 16px;
-        cursor: pointer;
-        padding: 6px;
-      }
-
-      .perfil-container {
-        background: #ffffff;
-        border: 2px solid #e5b800;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 400px;
-        margin: 40px auto;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        text-wrap: wrap;
-        word-break: break-all;
-        overflow-wrap: break-word;
-      }
-
-      .perfil-header {
-        display: flex;
-        align-items: center;
-        background-color: #f5f6f8;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-      }
-
-      .perfil-header img {
-        width: 50px;
-        margin-right: 15px;
-      }
-
-      .perfil-header h2 {
-        color: #003366;
-        margin: 0;
-      }
-
-      .perfil-header p {
-        margin: 2px 0 0;
-        color: #3a4a63;
-        font-size: 0.9rem;
-      }
-
-      .sessao {
-        border-top: 2px solid #e5b800;
-        padding-top: 10px;
-        margin-top: 10px;
-      }
-
-      .sessao h3 {
-        color: #003366;
-        margin-bottom: 8px;
-      }
-
-      .sessao p {
-        margin: 4px 0;
-        color: #3a4a63;
-      }
-
-      .intencao-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 0;
-        border-bottom: 1px solid #eee;
-      }
-
-      .intencao-item p {
-        font-family: "Lato", sans-serif;
-        margin: 0;
-        flex-grow: 1;
-        margin-right: 10px;
-        overflow-wrap: break-word;
-        text-wrap: wrap;
-      }
-
-      .btn-remover, .btn-editar {
-        background-color: #d49e17bd;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 3px 7px;
-        font-size: 0.8rem;
-        cursor: pointer;
-        flex-shrink: 0;
-      }
-      .btn-editar:hover {
-        background-color: #003701;
-      }
-      .btn-remover:hover {
-        background-color: #c91825;
-      }
-
-      footer {
-        color: white;
-        text-align: center;
-        padding: 15px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        position: fixed;
-        width: 100%;
-        bottom: 0;
-        margin: 0;
-      }
-    </style>
-    <script src="app.js"></script>
-    <script>
-      //ver se o usuário está logado
-      const usuarioLogado = localStorage.getItem("usuario");
-      if (!usuarioLogado) {
-        window.location.href = "login.html";
-      }
-
-      // função de logout
-      function logout() {
-        localStorage.removeItem("usuario");
-        window.location.href = "index.html";
-      }
-    </script>
-  </body>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/account.js"></script>
+</body>
 </html>

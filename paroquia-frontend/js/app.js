@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#menu-toggle')?.addEventListener('click',()=>{sidebar.classList.add('open');overlay.classList.add('open');}); document.querySelector('#menu-close')?.addEventListener('click',closeMenu); overlay?.addEventListener('click',closeMenu);
   function closeMenu(){sidebar?.classList.remove('open');overlay?.classList.remove('open');}
   if(session.user?.tipo_usuario==='admin') document.querySelector('#link-admin')?.style.removeProperty('display');
-  document.querySelector('#logout')?.addEventListener('click',logout);
+  if(session.token){document.querySelector('#link-account')?.style.removeProperty('display');document.querySelector('#link-login')?.style.setProperty('display','none');document.querySelector('#link-logout')?.style.removeProperty('display');}
+  document.querySelector('#logout, #link-logout')?.addEventListener('click',(event)=>{event.preventDefault();logout();});
   loadPublicContent();
 });
 async function loadPublicContent(){
