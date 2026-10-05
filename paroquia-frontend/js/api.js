@@ -31,3 +31,40 @@ function formatDate(value) {
   return Number.isNaN(parsed.getTime()) ? 'Data inválida' : parsed.toLocaleDateString('pt-BR');
 }
 document.addEventListener('error', (event) => { if (event.target.tagName === 'IMG' && !event.target.dataset.fallback) { event.target.dataset.fallback = '1'; event.target.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22360%22%3E%3Crect width=%22600%22 height=%22360%22 fill=%22%23ead8c6%22/%3E%3Ctext x=%22300%22 y=%22180%22 text-anchor=%22middle%22 fill=%22%23563b42%22 font-size=%2224%22%3EParóquia Santa Teresinha%3C/text%3E%3C/svg%3E'; } }, true);
+(() => {
+  const key = 'paroquia_theme';
+  const root = document.documentElement;
+  let theme = 'light';
+  try { theme = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch { /* Tema claro como padrão. */ }
+  root.dataset.theme = theme;
+  const update = (button) => {
+    const dark = root.dataset.theme === 'dark';
+    button.textContent = dark ? '☀' : '☾';
+    button.setAttribute('aria-label', dark ? 'Ativar tema claro' : 'Ativar tema escuro');
+    button.setAttribute('aria-pressed', String(dark));
+    button.title = dark ? 'Ativar tema claro' : 'Ativar tema escuro';
+    let themeColor = document.querySelector('meta[name="theme-color"]');
+    if (!themeColor) {
+      themeColor = document.createElement('meta');
+      themeColor.name = 'theme-color';
+      document.head.append(themeColor);
+    }
+    themeColor.content = dark ? '#1a1312' : '#0d5688';
+  };
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'theme-toggle';
+    const header = document.querySelector('body > header');
+    const menu = header?.querySelector('#menu-toggle');
+    if (menu) header.insertBefore(button, menu);
+    else if (header) header.append(button);
+    else button.classList.add('is-floating');
+    update(button);
+    button.addEventListener('click', () => {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(key, root.dataset.theme); } catch { /* A seleção segue ativa nesta página. */ }
+      update(button);
+    });
+  });
+})();

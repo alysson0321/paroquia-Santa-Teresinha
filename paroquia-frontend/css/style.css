@@ -52,3 +52,31 @@ footer{padding:24px 16px;line-height:1.8}
 @media(max-width:700px){header{height:72px}.hero{padding:32px 18px 28px}.hero h1{font-size:clamp(27px,7vw,34px)}.hero img{height:clamp(220px,66vw,340px)}.hero p{font-size:14px;line-height:1.7}.section{margin:12px 8px;padding:20px 16px;border-radius:12px}.section h2{margin-bottom:18px}.parocos,.missas{gap:16px}.paroco{width:112px}.paroco img{width:88px;height:105px}.missa{width:145px}.missa img{width:130px;height:84px}.grid{grid-template-columns:1fr}.card img{height:190px}#lista-eventos{grid-template-columns:minmax(0,1fr)}#lista-eventos .event-card img{height:clamp(190px,58vw,280px);padding:10px}.event-card .card-body{padding:15px 16px 18px}#lista-midias{grid-template-columns:minmax(0,340px);justify-content:center}#lista-midias .media-card img{height:auto;aspect-ratio:4/3}.contact{padding-top:24px;padding-bottom:26px}}
 @media(min-width:701px) and (max-width:1050px){#lista-midias{grid-template-columns:repeat(3,minmax(0,1fr))}#lista-midias .media-card img{height:auto;aspect-ratio:4/3}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+/* Tema escuro opcional */
+:root[data-theme="dark"]{color-scheme:dark;--blue:#4b9ac8;--blue-dark:#3279a7;--blue-soft:#302927;--gold:#e2bc5d;--gold-light:#f0cb6a;--gray:#1a1312;--ink:#f4ece7;--muted:#c0b0a8;--shadow:0 10px 28px #0006;--soft-shadow:0 8px 24px #0005;--card-border:#493936}
+:root[data-theme="dark"] body{color:var(--ink);background:#1a1312}
+:root[data-theme="dark"] .hero,:root[data-theme="dark"] .section,:root[data-theme="dark"] .sidebar,:root[data-theme="dark"] form,:root[data-theme="dark"] .help-box,:root[data-theme="dark"] table,:root[data-theme="dark"] .account-profile,:root[data-theme="dark"] .account-record,:root[data-theme="dark"] .account-dialog{color:var(--ink);background-color:#251c1a;border-color:#493936}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] #lista-eventos .event-card{color:var(--ink);background:#251c1a;border-color:#493936}
+:root[data-theme="dark"] #lista-eventos .event-card img,:root[data-theme="dark"] .card img{background:#302725}
+:root[data-theme="dark"] .hero p{color:#e6dcd6}
+:root[data-theme="dark"] .card h3,:root[data-theme="dark"] .account-section-heading h2,:root[data-theme="dark"] .account-dialog h2{color:var(--ink)}
+:root[data-theme="dark"] .card p,:root[data-theme="dark"] .record-copy p,:root[data-theme="dark"] .account-identity>p:last-child{color:var(--muted)}
+:root[data-theme="dark"] .empty{color:#d7cbc5;background:#302725}
+:root[data-theme="dark"] .sidebar a{color:#e8ded8}
+:root[data-theme="dark"] .sidebar li{border-color:#493936}
+:root[data-theme="dark"] button.secondary,:root[data-theme="dark"] .button.secondary{color:#e5c774;background:#3a2e2a}
+:root[data-theme="dark"] input,:root[data-theme="dark"] textarea,:root[data-theme="dark"] select{color:var(--ink);background:#1d1715;border-color:#5c4942}
+:root[data-theme="dark"] input::placeholder,:root[data-theme="dark"] textarea::placeholder{color:#a9958b}
+:root[data-theme="dark"] th{color:#f0d581;background:#302725}
+:root[data-theme="dark"] td{border-color:#493936}
+:root[data-theme="dark"] .social a{background:#f5eee9}
+:root[data-theme="dark"] .account-back,:root[data-theme="dark"] .card .button{color:#77b9e0}
+:root[data-theme="dark"] .status-pendente{color:#ffe08a;background:#514326}
+:root[data-theme="dark"] .status-aprovado{color:#a3e0b8;background:#203d2b}
+:root[data-theme="dark"] .status-rejeitado{color:#ffb0b0;background:#4b2828}
+.theme-toggle{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;padding:0;border:1px solid #ffffff65;border-radius:50%;color:#fff;background:#ffffff16;font:700 20px/1 Arial,sans-serif;transition:background .2s,transform .2s}
+.theme-toggle:hover{color:#fff;background:#ffffff32;transform:rotate(-8deg)}
+.theme-toggle.is-floating{position:fixed;right:16px;bottom:16px;z-index:60;width:48px;height:48px;flex-basis:48px;color:var(--blue-dark);background:var(--white);border:1px solid #d7e0e6;box-shadow:var(--shadow)}
+:root[data-theme="dark"] .theme-toggle.is-floating{color:#f2d27c;background:#302522;border-color:#59443d}
+@media(max-width:700px){.theme-toggle{width:38px;height:38px;flex-basis:38px}.theme-toggle.is-floating{width:46px;height:46px;flex-basis:46px}}

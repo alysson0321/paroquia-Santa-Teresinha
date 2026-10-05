@@ -1,1 +1,53 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Intenções de missa</title><link rel="stylesheet" href="css/style.css"></head><body><main class="admin"><h1>Minhas intenções de missa</h1><form id="form"><label>Descrição<textarea name="descricao" required></textarea></label><label>Data da missa<input name="data_missa" type="date" required></label><p id="feedback" class="feedback"></p><button>Registrar intenção</button> <a class="button secondary" href="index.html">Voltar</a></form><div id="lista" class="grid"></div></main><script src="js/api.js"></script><script>requireLogin();const list=document.querySelector('#lista');async function load(){try{const items=await api('/intencoes');list.innerHTML=items.length?items.map(i=>`<article class="card"><div class="card-body"><h3>${escapeHtml(i.descricao)}</h3><p>${formatDate(i.data_missa)}</p><button class="danger" data-id="${i.id}">Excluir</button></div></article>`).join(''):'<p class="empty">Nenhuma intenção registrada.</p>';}catch(e){list.innerHTML=`<p>${escapeHtml(e.message)}</p>`;}}document.querySelector('#form').addEventListener('submit',async e=>{e.preventDefault();try{await api('/intencoes',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});e.target.reset();load();}catch(err){document.querySelector('#feedback').textContent=err.message;}});list.addEventListener('click',async e=>{if(e.target.dataset.id&&confirm('Remover esta intenção?')){await api('/intencoes/'+e.target.dataset.id,{method:'DELETE'});load();}});load();</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0d5688">
+  <title>Intenções de missa · Paróquia Santa Teresinha</title>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css?v=20261005-theme1">
+</head>
+<body>
+  <main class="admin">
+    <a class="account-back" href="index.html">← Voltar ao site</a>
+    <h1>Minhas intenções de missa</h1>
+    <form id="form">
+      <label>Descrição<textarea name="descricao" required maxlength="1000"></textarea></label>
+      <label>Data da missa<input name="data_missa" type="date" required></label>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+      <button>Registrar intenção</button>
+    </form>
+    <div id="lista" class="grid"></div>
+  </main>
+  <script src="js/api.js?v=20261005-theme1"></script>
+  <script>
+    requireLogin();
+    const list=document.querySelector('#lista');
+    async function load(){
+      try {
+        const items=await api('/intencoes');
+        list.innerHTML=items.length?items.map(i=>`<article class="card"><div class="card-body"><h3>${escapeHtml(i.descricao)}</h3><p>${formatDate(i.data_missa)}</p><button class="danger" data-id="${i.id}">Excluir</button></div></article>`).join(''):'<p class="empty">Nenhuma intenção registrada.</p>';
+      } catch(error) { list.innerHTML=`<p class="empty">${escapeHtml(error.message)}</p>`; }
+    }
+    document.querySelector('#form').addEventListener('submit',async event=>{
+      event.preventDefault();
+      const feedback=document.querySelector('#feedback');
+      try {
+        await api('/intencoes',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.currentTarget)))});
+        event.currentTarget.reset();
+        feedback.textContent='Intenção registrada com sucesso.';
+        await load();
+      } catch(error) { feedback.textContent=error.message; }
+    });
+    list.addEventListener('click',async event=>{
+      const button=event.target.closest('[data-id]');
+      if(button&&confirm('Remover esta intenção?')){
+        try { await api(`/intencoes/${button.dataset.id}`,{method:'DELETE'}); await load(); }
+        catch(error) { alert(error.message); }
+      }
+    });
+    load();
+  </script>
+</body>
+</html>
