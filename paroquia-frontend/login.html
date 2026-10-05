@@ -14,20 +14,22 @@
     <h1>Entrar na área da paróquia</h1>
     <p>O acesso permite registrar intenções de missa, enviar comprovantes de dízimo e acompanhar seus registros. Administradores também acessam o painel de conteúdo.</p>
     <form id="login-form">
-      <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
-      <label>Senha<input name="senha" type="password" autocomplete="current-password" required><small>Sua senha é protegida e não é exibida no site.</small></label>
+      <label>E-mail<input name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+      <label>Senha<input name="senha" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false" required><small>Sua senha é protegida e não é exibida no site.</small></label>
       <p id="feedback" class="feedback" aria-live="polite"></p>
       <button>Entrar</button>
       <a class="button secondary" href="registro.html">Criar conta</a>
     </form>
   </main>
-  <script src="js/api.js?v=20261005-theme2"></script>
+  <script src="js/api.js?v=20261005-loginfix1"></script>
   <script>
     document.querySelector('#login-form').addEventListener('submit',async event=>{
       event.preventDefault();
       const feedback=document.querySelector('#feedback');
       try {
-        const data=await api('/login',{method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.currentTarget)))});
+        const credentials=Object.fromEntries(new FormData(event.currentTarget));
+        credentials.email=credentials.email.trim();
+        const data=await api('/login',{method:'POST',body:JSON.stringify(credentials)});
         saveSession(data);
         window.location.href=data.usuario.tipo_usuario==='admin'?'admin.html':'conta.html';
       } catch(error) { feedback.textContent=error.message; feedback.style.color='crimson'; }
