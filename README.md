@@ -109,16 +109,6 @@ node scripts/create-admin.js seu-email@exemplo.com "escolha-uma-senha-forte"
 
 O modo em memória cria uma conta administrativa automática para demonstração local. Use esse modo apenas na própria máquina; não o exponha como ambiente público.
 
-## Publicação
-
-O arquivo `render.yaml` descreve a API e o PostgreSQL no Render. A publicação também exige configurar as variáveis do serviço e hospedar o front-end em um servidor estático. Defina `FRONTEND_ORIGIN` com a origem pública do front-end e configure `window.PAROQUIA_API_URL` com a URL pública da API.
-
-## Próximos passos
-
-- Adicionar capturas de tela do site e do painel administrativo
-- Disponibilizar edição e exclusão de eventos e mídias no painel
-- Documentar melhor o processo de publicação do front-end
-
 ---
 
 <div align="center">
