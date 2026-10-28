@@ -1,61 +1,118 @@
-# Paróquia Santa Teresinha
+<div align="center">
 
-Reconstrução do sistema da paróquia mantendo a divisão `paroquia-backend` / `paroquia-frontend`, o conteúdo principal e o fluxo de intenções, dízimos, eventos e mídias.
+# ⛪ Paróquia Santa Teresinha
 
-## O que mudou
+### Sistema web para aproximar a comunidade e facilitar a gestão paroquial
 
-- API Express modularizada em rotas, controllers, serviços, validações e middlewares.
-- Senhas protegidas com bcrypt e login com JWT.
-- Permissões administrativas aplicadas no backend.
-- CRUD administrativo de eventos e mídias.
-- Uploads com limite de tamanho e tipos permitidos.
-- Validação de entradas com Zod, rate limit no login/cadastro e Helmet.
-- Usuários só acessam as próprias intenções e dízimos.
-- Banco com índices, timestamps e novas colunas de auditoria.
-- Frontend preservando a proposta visual original, agora com chamadas de API centralizadas e painel administrativo em abas.
+Informações da paróquia, intenções de missa, dízimos, eventos e mídias em um só lugar.
 
-## Como o sistema funciona
+[![Acessar aplicação](https://img.shields.io/badge/Acessar%20aplica%C3%A7%C3%A3o-0D5688?style=for-the-badge&logo=googlechrome&logoColor=white)](https://paroquiasantateresinha.onrender.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+![Express](https://img.shields.io/badge/Express-222222?style=flat-square&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=222222)
 
-### Visitante
+</div>
 
-O visitante acessa a página inicial, conhece a padroeira, consulta os párocos, horários das missas, eventos, mídias e canais de contato. Eventos e mídias publicados pela administração aparecem automaticamente nas respectivas seções.
+---
 
-### Paroquiano
+## Sobre o projeto
 
-O paroquiano cria uma conta e entra com e-mail e senha. Depois do login, pode registrar uma intenção de missa, acompanhar suas próprias intenções, enviar um comprovante de dízimo e consultar o histórico dos seus envios. Cada conta só recebe os próprios registros.
+Aplicação para a **Paróquia Santa Teresinha do Menino Jesus**, em Jucati–PE. O site reúne informações da comunidade e oferece fluxos digitais para intenções de missa e envio de comprovantes de dízimo. Uma área administrativa dá suporte ao gerenciamento de eventos, mídias, dízimos e intenções.
 
-### Administrador
+## Funcionalidades
 
-O administrador entra no painel e encontra quatro áreas: gerenciamento de eventos, gerenciamento de mídias, conferência de dízimos e consulta de intenções. O próprio painel contém orientações sobre cada campo, formato dos arquivos e significado dos status.
+| Área | Recursos |
+| --- | --- |
+| **Site público** | História da padroeira, párocos, horários de missa, eventos, mídias e canais de contato |
+| **Conta do paroquiano** | Cadastro e login; registro e consulta das próprias intenções; envio e histórico de comprovantes de dízimo |
+| **Administração** | Consulta de intenções, conferência de dízimos e gerenciamento de eventos e mídias |
+| **API** | Autenticação JWT, validação de dados, controle de acesso e upload com limites de tamanho e tipo |
 
-### Eventos e mídias
+> A API já inclui operações de atualização e exclusão para eventos e mídias; essas ações ainda não estão disponíveis no painel administrativo.
 
-Para um evento, informe título, data, texto da data, local e banner. Para uma mídia, informe título, data, link externo e capa. Depois de publicados, os registros são exibidos no site público. A API também possui endpoints de atualização e exclusão para a próxima etapa da interface administrativa.
+## Tecnologias
 
-## Execução
+- **Back-end:** Node.js, Express
+- **Banco de dados:** PostgreSQL; modo local de demonstração em memória
+- **Autenticação e segurança:** JWT, bcrypt, Zod, Helmet e limite de tentativas
+- **Front-end:** HTML, CSS e JavaScript
+- **Publicação:** configuração inicial para Render em `render.yaml`
 
-1. Instale Node.js e PostgreSQL.
-2. Entre em `paroquia-backend`, copie `.env.example` para `.env` e configure `DATABASE_URL` e `JWT_SECRET`.
-3. Execute `database.sql` no banco.
-4. Execute `npm install` dentro de `paroquia-backend`.
-5. Execute `npm start` dentro de `paroquia-backend`.
-6. Sirva `paroquia-frontend` por um servidor estático, como Live Server.
+## Estrutura
 
-O frontend usa `http://localhost:3000/api` por padrão. Para alterar, defina `window.PAROQUIA_API_URL` antes dos scripts.
+```text
+.
+├── paroquia-backend/    # API Express
+├── paroquia-frontend/   # Site e painel administrativo
+├── database.sql         # Estrutura inicial do PostgreSQL
+├── package.json         # Comandos de desenvolvimento e inicialização
+└── render.yaml          # Configuração inicial para Render
+```
 
-## Conta de demonstração
+## Executar localmente
 
-Quando `DATABASE_URL` não está configurada, o backend usa um banco de demonstração em memória e cria automaticamente:
+### Requisitos
 
-- E-mail: `admin@paroquia.local`
-- Senha: `Admin@12345`
+- Node.js
+- PostgreSQL para persistência local
+- Um servidor estático para servir o front-end, como a extensão Live Server
 
-Essa conta serve apenas para teste local. Em produção, configure PostgreSQL, altere a senha e defina `JWT_SECRET` no `.env`.
+### 1. Configure a API
 
-Para uma instalação PostgreSQL já funcionando, use `node scripts/create-admin.js seu@email.com SuaSenhaForte` dentro de `paroquia-backend` para criar ou atualizar o administrador.
+Na raiz do repositório:
 
-O arquivo `render.yaml` contém a configuração inicial para publicar a API e um PostgreSQL no Render. A publicação ainda exige uma conta do Render e a configuração da URL pública do frontend em `FRONTEND_ORIGIN`.
+```bash
+cd paroquia-backend
+npm install
+```
 
-## Observação sobre imagens
+Copie `.env.example` para `.env` e configure os valores locais. Defina uma chave JWT própria e forte. Não publique o arquivo `.env` nem use valores de exemplo em produção.
 
-As imagens originais devem permanecer na pasta `paroquia-frontend/img`. A interface possui um fallback visual caso algum arquivo ainda não esteja presente.
+### 2. Prepare o banco
+
+Crie um banco PostgreSQL e execute o arquivo `database.sql`, localizado na raiz do repositório. Configure `DATABASE_URL` no `.env` da API para apontar para esse banco.
+
+### 3. Inicie a API
+
+Dentro de `paroquia-backend`:
+
+```bash
+npm run dev
+```
+
+A API inicia na porta definida por `PORT` (por padrão, 3000).
+
+### 4. Sirva o front-end
+
+Abra a pasta `paroquia-frontend` com um servidor estático. O front-end usa `http://localhost:3000/api` por padrão. Se necessário, defina `window.PAROQUIA_API_URL` antes dos scripts do site para apontar para outra URL da API.
+
+### 5. Crie uma conta administrativa
+
+Com PostgreSQL configurado e a API apontando para ele, execute a partir da pasta `paroquia-backend`:
+
+```bash
+node scripts/create-admin.js <email> <senha-forte>
+```
+
+O modo em memória cria uma conta administrativa automática para demonstração local. Use esse modo apenas na própria máquina; não o exponha como ambiente público.
+
+## Publicação
+
+O arquivo `render.yaml` descreve a API e o PostgreSQL no Render. A publicação também exige configurar as variáveis do serviço e hospedar o front-end em um servidor estático. Defina `FRONTEND_ORIGIN` com a origem pública do front-end e configure `window.PAROQUIA_API_URL` com a URL pública da API.
+
+## Próximos passos
+
+- Adicionar capturas de tela do site e do painel administrativo
+- Disponibilizar edição e exclusão de eventos e mídias no painel
+- Documentar uma demonstração pública e as etapas de publicação do front-end
+
+---
+
+<div align="center">
+
+Desenvolvido para a comunidade da Paróquia Santa Teresinha · Jucati–PE
+
+[Repositório](https://github.com/alysson0321/paroquia-Santa-Teresinha) · [Perfil de Alysson](https://github.com/alysson0321)
+
+</div>
