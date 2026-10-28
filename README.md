@@ -31,6 +31,18 @@ Aplicação para a **Paróquia Santa Teresinha do Menino Jesus**, em Jucati–PE
 
 > A API já inclui operações de atualização e exclusão para eventos e mídias; essas ações ainda não estão disponíveis no painel administrativo.
 
+## Capturas do sistema
+
+### Página inicial
+
+![Página inicial da Paróquia Santa Teresinha](docs/screenshots/home.jpg)
+
+### Painel administrativo
+
+| Cadastro de eventos | Cadastro de mídias |
+| --- | --- |
+| ![Painel administrativo com formulário de evento](docs/screenshots/admin-events.jpg) | ![Painel administrativo com formulário de mídia](docs/screenshots/admin-media.jpg) |
+
 ## Tecnologias
 
 - **Back-end:** Node.js, Express
