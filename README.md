@@ -89,10 +89,10 @@ Abra a pasta `paroquia-frontend` com um servidor estático. O front-end usa `htt
 
 ### 5. Crie uma conta administrativa
 
-Com PostgreSQL configurado e a API apontando para ele, execute a partir da pasta `paroquia-backend`:
+Com PostgreSQL configurado e a API apontando para ele, execute a partir da pasta `paroquia-backend`. Troque o e-mail e a senha de exemplo por valores seus:
 
 ```bash
-node scripts/create-admin.js <email> <senha-forte>
+node scripts/create-admin.js seu-email@exemplo.com "escolha-uma-senha-forte"
 ```
 
 O modo em memória cria uma conta administrativa automática para demonstração local. Use esse modo apenas na própria máquina; não o exponha como ambiente público.
@@ -105,7 +105,7 @@ O arquivo `render.yaml` descreve a API e o PostgreSQL no Render. A publicação 
 
 - Adicionar capturas de tela do site e do painel administrativo
 - Disponibilizar edição e exclusão de eventos e mídias no painel
-- Documentar uma demonstração pública e as etapas de publicação do front-end
+- Documentar melhor o processo de publicação do front-end
 
 ---
 
